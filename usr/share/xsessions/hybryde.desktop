@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Name=Hybryde
+Comment= Hybryde Desktop
+Exec=/usr/share/hybryde/scripts/session-x/hybryde-session.sh
+Icon=/usr/share/hybryde/logos/logo_hyb.png
+Type=Application

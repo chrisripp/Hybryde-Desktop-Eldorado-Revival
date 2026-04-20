@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde Status
+Name[fr]=État de la session Hybryde
+Comment=Diagnostic rapide de la session Hybryde
+Comment[fr]=Affiche l'état des composants de la session Hybryde
+Exec=/usr/share/hybryde/scripts/hybryde-status.sh 
+Icon=/usr/share/hybryde/SquareGlass/Clock 3.png
+Terminal=false
+Categories=System;Settings;hybdryde
+Keywords=hybryde;status;diagnostic;session;
+StartupNotify=false

@@ -1,0 +1,124 @@
+#! /bin/bash
+
+
+#========================================================================
+# larrieu olivier le 02/02/2011
+# contact : olivelinux36@gmail.com
+#
+# License: GNU General Public License (GPL)
+# Ce programme est un logiciel libre: vous pouvez le redistribuer
+# et/ou le modifier selon les termes de la "GNU General Public
+# License", tels que publiés par la "Free Software Foundation"; soit
+# la version 2 de cette licence ou (à votre choix) toute version
+# ultérieure.
+#
+# Ce programme est distribué dans l'espoir qu'il sera utile, mais
+# SANS AUCUNE GARANTIE, ni explicite ni implicite; sans même les
+# garanties de commercialisation ou d'adaptation dans un but spécifique.
+#
+# Se référer à la "GNU General Public License" pour plus de détails.
+#
+# Vous devriez avoir reçu une copie de la "GNU General Public License"
+# en même temps que ce programme; sinon, écrivez a la "Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA".
+# http://www.gnu.org/licenses/gpl-howto.fr.html
+#========================================================================
+
+sound="/usr/share/hybryde/sounds/login.ogg"
+wm="metacity"
+autostart="$HOME/.hybryde/autostart/autostart.sh"
+home="/tmp/home.txt"
+tmp="/tmp/hybryde-pid.txt"
+a="1"
+live=$(ls /rofs 2>/dev/null)
+
+if [ -z "$live" ]
+then
+rm /home/$user/.dock-acceuil/current_theme/launchers/ubiquity-gtkui.desktop 2>/dev/null
+fi
+
+#_____________________ Premier démarrage
+
+if [ -z "$1" ]
+	then
+		# Clean up after GDM
+		xprop -root -remove _NET_NUMBER_OF_DESKTOPS \
+		      -remove _NET_DESKTOP_NAMES \
+		      -remove _NET_CURRENT_DESKTOP 2> /dev/null
+		#login sound
+		canberra-gtk-play -f $sound &
+fi
+
+
+echo $HOME > $home
+
+			killall xterm cairo-dock nautilus
+
+	$wm --replace &
+echo $! > $tmp
+
+	
+
+			sleep 1
+
+#___________________ On kill les process d'Unity pour retour sur acceuil
+
+zeitgeist-daemon --quit
+
+for i in unity-applications-daemon  unity-window-decorator unity-files-daemon  unity-panel-service      
+do
+pid=$(pidof $i)
+kill -9 $pid
+done
+
+killbam()
+{
+while pidof bamfdaemon
+do
+	bam=$(pidof bamfdaemon)
+	kill -9 $bam
+	if pidof bamfdaemon
+		then kill -9 $bam
+		else break
+	fi
+done
+}
+
+killbam &
+
+
+	
+
+	gnome-settings-daemon &
+echo $! >> $tmp
+	nm-applet &
+echo $! >> $tmp
+	nautilus --no-default-window &
+echo $! >> $tmp
+	sleep 4 
+
+
+while [ "$a" ]
+do
+	/usr/bin/cairo-dock -kd .dock-accueil &
+	echo $! >> $tmp
+	/usr/bin/cairo-dock -kd .dock-panel &
+	echo $! >> $tmp
+			sleep 1
+	cairo_pid=$(pidof cairo-dock)
+
+		if [ -z "$cairo_pid" ]
+			then /usr/bin/cairo-dock -kd .dock-accueil &
+			     echo $! >> $tmp
+			     /usr/bin/cairo-dock -kd .dock-panel &
+				echo $! >> $tmp
+
+			else break
+		fi
+done
+
+$autostart "$1" ;
+
+
+
+exit 0

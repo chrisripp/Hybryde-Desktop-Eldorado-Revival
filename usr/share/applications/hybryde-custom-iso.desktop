@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde ISO
+Name[fr]=Custom ISO Hybryde
+Comment=Custom ISO Hybryde
+Comment[fr]=Custom ISO Hybryde
+Exec=/usr/share/hybryde/scripts/custom-iso.sh
+Icon=/usr/share/hybryde/SquareGlass/Nero 3.png
+Terminal=true
+Categories=System;Settings;hybryde
+Keywords=hybryde;status;diagnostic;session;
+StartupNotify=false

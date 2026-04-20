@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_menu
+    xmlns="http://openbox.org/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://openbox.org/
+    file:///usr/share/openbox/menu.xsd">
+
+    <menu id="root-menu" label="Openbox">
+
+        <!-- Applications favorites -->
+        <item label="Terminal" icon="/usr/share/icons/gnome/48x48/apps/utilities-terminal.png">
+            <action name="Execute"><execute>xfce4-terminal</execute></action>
+        </item>
+        <item label="Navigateur web" icon="firefox">
+            <action name="Execute"><execute>firefox</execute></action>
+        </item>
+        <item label="Gestionnaire de fichiers" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute"><execute>thunar</execute></action>
+        </item>
+        <separator />
+
+        <!-- Applications par catégorie -->
+        <menu id="menu-Network" label="Internet" icon="applications-internet">
+        <item label="Firefox ESR" icon="/usr/share/icons/hicolor/48x48/apps/firefox-esr.png">
+            <action name="Execute">
+                <execute>/usr/lib/firefox-esr/firefox-esr</execute>
+            </action>
+        </item>
+        <item label="Serveur mandataire" icon="network-server">
+            <action name="Execute">
+                <execute>mate-network-properties</execute>
+            </action>
+        </item>
+        <item label="Partage de fichiers personnels" icon="folder-remote">
+            <action name="Execute">
+                <execute>mate-file-share-properties</execute>
+            </action>
+        </item>
+        <item label="Configuration réseau avancée" icon="preferences-system-network">
+            <action name="Execute">
+                <execute>nm-connection-editor</execute>
+            </action>
+        </item>
+        <item label="KDEConnect" icon="/usr/share/icons/hicolor/scalable/apps/kdeconnect.svg">
+            <action name="Execute">
+                <execute>kdeconnect-app</execute>
+            </action>
+        </item>
+        <item label="Indicateur de KDEConnect" icon="/usr/share/icons/hicolor/scalable/apps/kdeconnect.svg">
+            <action name="Execute">
+                <execute>kdeconnect-indicator</execute>
+            </action>
+        </item>
+        <item label="SMS par KDEConnect" icon="/usr/share/icons/hicolor/scalable/apps/kdeconnect.svg">
+            <action name="Execute">
+                <execute>kdeconnect-sms</execute>
+            </action>
+        </item>
+        <item label="Client de messagerie" icon="org.xfce.mailreader">
+            <action name="Execute">
+                <execute>exo-open --launch MailReader</execute>
+            </action>
+        </item>
+        <item label="Navigateur Web" icon="org.xfce.webbrowser">
+            <action name="Execute">
+                <execute>exo-open --launch WebBrowser</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-AudioVideo" label="Son et Vidéo" icon="applications-multimedia">
+        <item label="Emixer" icon="emixer">
+            <action name="Execute">
+                <execute>emixer</execute>
+            </action>
+        </item>
+        <item label="Ex Falso" icon="io.github.quodlibet.ExFalso">
+            <action name="Execute">
+                <execute>exfalso</execute>
+            </action>
+        </item>
+        <item label="Quod Libet" icon="io.github.quodlibet.QuodLibet">
+            <action name="Execute">
+                <execute>quodlibet --run --play-file</execute>
+            </action>
+        </item>
+        <item label="Son" icon="/usr/share/icons/gnome/48x48/apps/multimedia-volume-control.png">
+            <action name="Execute">
+                <execute>mate-volume-control</execute>
+            </action>
+        </item>
+        <item label="Contrôle du volume" icon="/usr/share/icons/gnome/48x48/apps/multimedia-volume-control.png">
+            <action name="Execute">
+                <execute>pavucontrol</execute>
+            </action>
+        </item>
+        <item label="Lecteur multimédia Parole" icon="org.xfce.parole">
+            <action name="Execute">
+                <execute>parole</execute>
+            </action>
+        </item>
+        <item label="PulseAudio System Tray" icon="/usr/share/icons/hicolor/scalable/apps/pasystray.svg">
+            <action name="Execute">
+                <execute>pasystray</execute>
+            </action>
+        </item>
+        <item label="Xfburn" icon="stock_xfburn">
+            <action name="Execute">
+                <execute>xfburn</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Graphics" label="Graphisme" icon="applications-graphics">
+        <item label="ImageMagick (color depth=q16)" icon="display-im7.q16">
+            <action name="Execute">
+                <execute>/usr/bin/display-im7.q16 -nostdin</execute>
+            </action>
+        </item>
+        <item label="Visionneuse d'images Eye of MATE" icon="/usr/share/icons/hicolor/32x32/apps/eom.png">
+            <action name="Execute">
+                <execute>eom</execute>
+            </action>
+        </item>
+        <item label="EPhoto" icon="ephoto">
+            <action name="Execute">
+                <execute>ephoto</execute>
+            </action>
+        </item>
+        <item label="LibreOffice Draw" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-draw.png">
+            <action name="Execute">
+                <execute>libreoffice --draw</execute>
+            </action>
+        </item>
+        <item label="Sélection de couleur MATE" icon="gtk-select-color">
+            <action name="Execute">
+                <execute>mate-color-select</execute>
+            </action>
+        </item>
+        <item label="Nouvelle fenêtre" icon="org.gnome.Papers">
+            <action name="Execute">
+                <execute>papers</execute>
+            </action>
+        </item>
+        <item label="Visionneur d’images Ristretto" icon="org.xfce.ristretto">
+            <action name="Execute">
+                <execute>ristretto</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Office" label="Bureautique" icon="applications-office">
+        <item label="Visionneur de documents Atril" icon="/usr/share/icons/hicolor/48x48/apps/atril.png">
+            <action name="Execute">
+                <execute>atril</execute>
+            </action>
+        </item>
+        <item label="GoldenDict-ng" icon="/usr/share/pixmaps/goldendict.png">
+            <action name="Execute">
+                <execute>goldendict</execute>
+            </action>
+        </item>
+        <item label="LibreOffice Calc" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-calc.png">
+            <action name="Execute">
+                <execute>libreoffice --calc</execute>
+            </action>
+        </item>
+        <item label="LibreOffice Impress" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-impress.png">
+            <action name="Execute">
+                <execute>libreoffice --impress</execute>
+            </action>
+        </item>
+        <item label="LibreOffice Math" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-math.png">
+            <action name="Execute">
+                <execute>libreoffice --math</execute>
+            </action>
+        </item>
+        <item label="LibreOffice" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-startcenter.png">
+            <action name="Execute">
+                <execute>libreoffice</execute>
+            </action>
+        </item>
+        <item label="LibreOffice Writer" icon="/usr/share/icons/hicolor/48x48/apps/libreoffice-writer.png">
+            <action name="Execute">
+                <execute>libreoffice --writer</execute>
+            </action>
+        </item>
+        <item label="Dictionnaire MATE" icon="/usr/share/icons/gnome/48x48/apps/accessories-dictionary.png">
+            <action name="Execute">
+                <execute>mate-dictionary</execute>
+            </action>
+        </item>
+        <item label="Dictionnaire" icon="org.xfce.Dictionary">
+            <action name="Execute">
+                <execute>xfce4-dict</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Development" label="Développement" icon="applications-development">
+        <item label="Elementary Perf" icon="elementary">
+            <action name="Execute">
+                <execute>elementary_perf</execute>
+            </action>
+        </item>
+        <item label="Elementary Test" icon="elementary">
+            <action name="Execute">
+                <execute>elementary_test</execute>
+            </action>
+        </item>
+        <item label="Geany" icon="/usr/share/icons/hicolor/48x48/apps/geany.png">
+            <action name="Execute">
+                <execute>geany</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Game" label="Jeux" icon="applications-games">
+        <item label="Fortune">
+            <action name="Execute">
+                <execute>sh -c 'fortune &amp;&amp; echo &amp;&amp; echo Press return to continue &amp;&amp; read returnkey'</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-System" label="Système" icon="applications-system">
+        <item label="BleachBit (as root)" icon="/usr/share/pixmaps/bleachbit.png">
+            <action name="Execute">
+                <execute>pkexec bleachbit</execute>
+            </action>
+        </item>
+        <item label="Éditeur dconf" icon="ca.desrt.dconf-editor">
+            <action name="Execute">
+                <execute>dconf-editor</execute>
+            </action>
+        </item>
+        <item label="Cairo-Dock (Mode Restreint)" icon="/usr/share/pixmaps/cairo-dock.svg">
+            <action name="Execute">
+                <execute>cairo-dock -A</execute>
+            </action>
+        </item>
+        <item label="Cairo-Dock" icon="/usr/share/pixmaps/cairo-dock.svg">
+            <action name="Execute">
+                <execute>cairo-dock</execute>
+            </action>
+        </item>
+        <item label="Caja" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute">
+                <execute>/usr/bin/caja --no-desktop --browser</execute>
+            </action>
+        </item>
+        <item label="Utilisateurs et groupes" icon="/usr/share/icons/gnome/48x48/apps/system-users.png">
+            <action name="Execute">
+                <execute>cinnamon-settings-users</execute>
+            </action>
+        </item>
+        <item label="UXTerm" icon="mini.xterm">
+            <action name="Execute">
+                <execute>uxterm</execute>
+            </action>
+        </item>
+        <item label="XTerm" icon="mini.xterm">
+            <action name="Execute">
+                <execute>xterm</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de fichiers EFM" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute">
+                <execute>enlightenment_filemanager</execute>
+            </action>
+        </item>
+        <item label="Installateur de paquets GDebi" icon="package-x-generic">
+            <action name="Execute">
+                <execute>gdebi-gtk</execute>
+            </action>
+        </item>
+        <item label="Moniteur système de GNOME" icon="org.gnome.SystemMonitor">
+            <action name="Execute">
+                <execute>gnome-system-monitor</execute>
+            </action>
+        </item>
+        <item label="GParted" icon="/usr/share/icons/hicolor/48x48/apps/gparted.png">
+            <action name="Execute">
+                <execute>/usr/sbin/gparted</execute>
+            </action>
+        </item>
+        <item label="Configuration Hybryde" icon="preferences-desktop">
+            <action name="Execute">
+                <execute>/usr/share/hybryde/scripts/hybryde-config.sh</execute>
+            </action>
+        </item>
+        <item label="État de la session Hybryde" icon="/usr/share/icons/gnome/48x48/apps/utilities-system-monitor.png">
+            <action name="Execute">
+                <execute>/usr/share/hybryde/scripts/hybryde-status.sh --zenity</execute>
+            </action>
+        </item>
+        <item label="Hybryde - Bienvenue" icon="/usr/share/hybryde/SquareGlass/square-Hyb.png">
+            <action name="Execute">
+                <execute>/usr/share/hybryde/scripts/hybryde-welcome.sh --force</execute>
+            </action>
+        </item>
+        <item label="jgmenu" icon="/usr/share/icons/hicolor/scalable/apps/jgmenu.svg">
+            <action name="Execute">
+                <execute>jgmenu_run</execute>
+            </action>
+        </item>
+        <item label="Paramètres de l'écran de connexion LightDM GTK Greeter" icon="/usr/share/icons/hicolor/48x48/apps/lightdm-gtk-greeter-settings.png">
+            <action name="Execute">
+                <execute>lightdm-gtk-greeter-settings-pkexec</execute>
+            </action>
+        </item>
+        <item label="LXTerminal" icon="lxterminal">
+            <action name="Execute">
+                <execute>lxterminal</execute>
+            </action>
+        </item>
+        <item label="Monteur d’images disque de MATE" icon="drive-removable-media">
+            <action name="Execute">
+                <execute>mate-disk-image-mounter</execute>
+            </action>
+        </item>
+        <item label="Analyseur d'utilisation des disques MATE" icon="/usr/share/icons/hicolor/48x48/apps/mate-disk-usage-analyzer.png">
+            <action name="Execute">
+                <execute>mate-disk-usage-analyzer</execute>
+            </action>
+        </item>
+        <item label="Statistiques de l'alimentation" icon="/usr/share/icons/hicolor/48x48/apps/mate-power-statistics.png">
+            <action name="Execute">
+                <execute>mate-power-statistics</execute>
+            </action>
+        </item>
+        <item label="Visionneuse de journaux système" icon="/usr/share/icons/hicolor/48x48/apps/mate-system-log.png">
+            <action name="Execute">
+                <execute>mate-system-log</execute>
+            </action>
+        </item>
+        <item label="Moniteur système MATE" icon="/usr/share/icons/gnome/48x48/apps/utilities-system-monitor.png">
+            <action name="Execute">
+                <execute>mate-system-monitor</execute>
+            </action>
+        </item>
+        <item label="Terminal MATE" icon="/usr/share/icons/gnome/48x48/apps/utilities-terminal.png">
+            <action name="Execute">
+                <execute>mate-terminal</execute>
+            </action>
+        </item>
+        <item label="Multilingual Terminal" icon="/usr/share/pixmaps/mlterm-icon-24colors-1.png">
+            <action name="Execute">
+                <execute>mlterm</execute>
+            </action>
+        </item>
+        <item label="BleachBit" icon="/usr/share/pixmaps/bleachbit.png">
+            <action name="Execute">
+                <execute>bleachbit</execute>
+            </action>
+        </item>
+        <item label="Fcitx 5" icon="/usr/share/icons/hicolor/48x48/apps/fcitx.png">
+            <action name="Execute">
+                <execute>/usr/bin/fcitx5</execute>
+            </action>
+        </item>
+        <item label="Contrôles parentaux" icon="org.freedesktop.MalcontentControl">
+            <action name="Execute">
+                <execute>malcontent-control</execute>
+            </action>
+        </item>
+        <item label="Statistiques de l’alimentation" icon="org.gnome.PowerStats">
+            <action name="Execute">
+                <execute>gnome-power-statistics</execute>
+            </action>
+        </item>
+        <item label="Moniteur système" icon="org.gnome.SystemMonitor">
+            <action name="Execute">
+                <execute>gnome-system-monitor</execute>
+            </action>
+        </item>
+        <item label="Terminal" icon="org.gnome.Terminal">
+            <action name="Execute">
+                <execute>gnome-terminal</execute>
+            </action>
+        </item>
+        <item label="Discover" icon="/usr/share/icons/hicolor/48x48/apps/plasmadiscover.png">
+            <action name="Execute">
+                <execute>plasma-discover</execute>
+            </action>
+        </item>
+        <item label="Afficheur de processus plantés" icon="tools-report-bug">
+            <action name="Execute">
+                <execute>drkonqi-coredump-gui</execute>
+            </action>
+        </item>
+        <item label="Centre d'informations" icon="hwinfo">
+            <action name="Execute">
+                <execute>kinfocenter</execute>
+            </action>
+        </item>
+        <item label="Éditeur de menus" icon="/usr/share/icons/hicolor/48x48/apps/kmenuedit.png">
+            <action name="Execute">
+                <execute>kmenuedit</execute>
+            </action>
+        </item>
+        <item label="KWalletManager" icon="/usr/share/icons/hicolor/48x48/apps/kwalletmanager.png">
+            <action name="Execute">
+                <execute>kwalletmanager5</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de partitions de KDE" icon="/usr/share/icons/hicolor/scalable/apps/partitionmanager.svg">
+            <action name="Execute">
+                <execute>partitionmanager</execute>
+            </action>
+        </item>
+        <item label="Surveillance du système" icon="/usr/share/icons/gnome/48x48/apps/utilities-system-monitor.png">
+            <action name="Execute">
+                <execute>plasma-systemmonitor</execute>
+            </action>
+        </item>
+        <item label="MATE Eiciel" icon="/usr/share/icons/hicolor/48x48/apps/mate-eiciel.png">
+            <action name="Execute">
+                <execute>/usr/bin/mate-eiciel</execute>
+            </action>
+        </item>
+        <item label="PCMan Gestionnaire de fichiers" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute">
+                <execute>pcmanfm</execute>
+            </action>
+        </item>
+        <item label="Retour à Hybryde" icon="/usr/share/hybryde/logos/logo_hyb.png">
+            <action name="Execute">
+                <execute>/usr/share/hybryde/scripts/session-x/retour-hybryde.sh</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de paquets Synaptic" icon="/usr/share/icons/hicolor/scalable/apps/synaptic.svg">
+            <action name="Execute">
+                <execute>synaptic-pkexec</execute>
+            </action>
+        </item>
+        <item label="Configuration de l’impression" icon="printer">
+            <action name="Execute">
+                <execute>system-config-printer</execute>
+            </action>
+        </item>
+        <item label="Terminology" icon="terminology">
+            <action name="Execute">
+                <execute>terminology</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de Fichiers Thunar" icon="org.xfce.thunar">
+            <action name="Execute">
+                <execute>thunar</execute>
+            </action>
+        </item>
+        <item label="Worker" icon="Worker">
+            <action name="Execute">
+                <execute>worker</execute>
+            </action>
+        </item>
+        <item label="Accessibilité" icon="org.xfce.settings.accessibility">
+            <action name="Execute">
+                <execute>xfce4-accessibility-settings</execute>
+            </action>
+        </item>
+        <item label="Applications par défaut" icon="org.xfce.settings.default-applications">
+            <action name="Execute">
+                <execute>xfce4-mime-settings</execute>
+            </action>
+        </item>
+        <item label="Visionneur de capteur" icon="/usr/share/icons/hicolor/48x48/apps/xfce-sensors.png">
+            <action name="Execute">
+                <execute>xfce4-sensors</execute>
+            </action>
+        </item>
+        <item label="Déconnexion" icon="xfsm-logout">
+            <action name="Execute">
+                <execute>xfce4-session-logout</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de tâches" icon="org.xfce.taskmanager">
+            <action name="Execute">
+                <execute>xfce4-taskmanager</execute>
+            </action>
+        </item>
+        <item label="Terminal Xfce" icon="org.xfce.terminal">
+            <action name="Execute">
+                <execute>xfce4-terminal</execute>
+            </action>
+        </item>
+        <item label="Session et démarrage" icon="org.xfce.session">
+            <action name="Execute">
+                <execute>xfce4-session-settings</execute>
+            </action>
+        </item>
+        <item label="Thai X terminal" icon="/usr/share/pixmaps/xiterm+thai.png">
+            <action name="Execute">
+                <execute>txiterm -ls -cursorColor yellow -cursorColorThai red -bg black -fg white</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Settings" label="Paramètres" icon="preferences-system">
+        <item label="Menu principal" icon="/usr/share/icons/hicolor/48x48/apps/alacarte.png">
+            <action name="Execute">
+                <execute>alacarte</execute>
+            </action>
+        </item>
+        <item label="ARandR" icon="display">
+            <action name="Execute">
+                <execute>arandr</execute>
+            </action>
+        </item>
+        <item label="Azote" icon="/usr/share/pixmaps/azote.svg">
+            <action name="Execute">
+                <execute>azote</execute>
+            </action>
+        </item>
+        <item label="Adaptateurs Bluetooth" icon="blueman-device">
+            <action name="Execute">
+                <execute>blueman-adapters</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire Bluetooth" icon="/usr/share/icons/hicolor/48x48/apps/blueman.png">
+            <action name="Execute">
+                <execute>blueman-manager</execute>
+            </action>
+        </item>
+        <item label="Gestion des fichiers" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute">
+                <execute>/usr/bin/caja-file-management-properties</execute>
+            </action>
+        </item>
+        <item label="Couleur" icon="cs-color">
+            <action name="Execute">
+                <execute>cinnamon-settings color</execute>
+            </action>
+        </item>
+        <item label="Affichage" icon="cs-display">
+            <action name="Execute">
+                <execute>cinnamon-settings display</execute>
+            </action>
+        </item>
+        <item label="Réseau" icon="cs-network">
+            <action name="Execute">
+                <execute>cinnamon-settings network</execute>
+            </action>
+        </item>
+        <item label="Actions" icon="cs-actions">
+            <action name="Execute">
+                <execute>cinnamon-settings actions</execute>
+            </action>
+        </item>
+        <item label="Applets" icon="cs-applets">
+            <action name="Execute">
+                <execute>cinnamon-settings applets</execute>
+            </action>
+        </item>
+        <item label="Fonds d’écran" icon="cs-backgrounds">
+            <action name="Execute">
+                <execute>cinnamon-settings backgrounds</execute>
+            </action>
+        </item>
+        <item label="Date et heure" icon="cs-date-time">
+            <action name="Execute">
+                <execute>cinnamon-settings calendar</execute>
+            </action>
+        </item>
+        <item label="Applications par défaut" icon="cs-default-applications">
+            <action name="Execute">
+                <execute>cinnamon-settings default</execute>
+            </action>
+        </item>
+        <item label="Desklets" icon="cs-desklets">
+            <action name="Execute">
+                <execute>cinnamon-settings desklets</execute>
+            </action>
+        </item>
+        <item label="Paramètres du système" icon="preferences-desktop">
+            <action name="Execute">
+                <execute>env WEBKIT_DISABLE_COMPOSITING_MODE=1 cinnamon-settings</execute>
+            </action>
+        </item>
+        <item label="Bureau" icon="cs-desktop">
+            <action name="Execute">
+                <execute>cinnamon-settings desktop</execute>
+            </action>
+        </item>
+        <item label="Effets" icon="cs-desktop-effects">
+            <action name="Execute">
+                <execute>cinnamon-settings effects</execute>
+            </action>
+        </item>
+        <item label="Extensions" icon="cs-extensions">
+            <action name="Execute">
+                <execute>cinnamon-settings extensions</execute>
+            </action>
+        </item>
+        <item label="Choix des polices" icon="cs-fonts">
+            <action name="Execute">
+                <execute>cinnamon-settings fonts</execute>
+            </action>
+        </item>
+        <item label="Général" icon="cs-general">
+            <action name="Execute">
+                <execute>cinnamon-settings general</execute>
+            </action>
+        </item>
+        <item label="Gestes" icon="cs-gestures">
+            <action name="Execute">
+                <execute>cinnamon-settings gestures</execute>
+            </action>
+        </item>
+        <item label="Coins intelligents" icon="cs-overview">
+            <action name="Execute">
+                <execute>cinnamon-settings hotcorner</execute>
+            </action>
+        </item>
+        <item label="Renseignements sur le système" icon="cs-details">
+            <action name="Execute">
+                <execute>cinnamon-settings info</execute>
+            </action>
+        </item>
+        <item label="Clavier" icon="cs-keyboard">
+            <action name="Execute">
+                <execute>cinnamon-settings keyboard</execute>
+            </action>
+        </item>
+        <item label="Souris et pavé tactile" icon="cs-mouse">
+            <action name="Execute">
+                <execute>cinnamon-settings mouse</execute>
+            </action>
+        </item>
+        <item label="Mode nuit" icon="cs-nightlight">
+            <action name="Execute">
+                <execute>cinnamon-settings nightlight</execute>
+            </action>
+        </item>
+        <item label="Notifications" icon="cs-notifications">
+            <action name="Execute">
+                <execute>cinnamon-settings notifications</execute>
+            </action>
+        </item>
+        <item label="Panneau" icon="cs-panel">
+            <action name="Execute">
+                <execute>cinnamon-settings panel</execute>
+            </action>
+        </item>
+        <item label="Gestion de l’alimentation" icon="cs-power">
+            <action name="Execute">
+                <execute>cinnamon-settings power</execute>
+            </action>
+        </item>
+        <item label="Protection des renseignements personnels" icon="cs-privacy">
+            <action name="Execute">
+                <execute>cinnamon-settings privacy</execute>
+            </action>
+        </item>
+        <item label="Économiseur d’écran" icon="cs-screensaver">
+            <action name="Execute">
+                <execute>cinnamon-settings screensaver</execute>
+            </action>
+        </item>
+        <item label="Son" icon="cs-sound">
+            <action name="Execute">
+                <execute>cinnamon-settings sound</execute>
+            </action>
+        </item>
+        <item label="Applications lancées au démarrage" icon="cs-startup-programs">
+            <action name="Execute">
+                <execute>cinnamon-settings startup</execute>
+            </action>
+        </item>
+        <item label="Thèmes" icon="cs-themes">
+            <action name="Execute">
+                <execute>cinnamon-settings themes</execute>
+            </action>
+        </item>
+        <item label="Thunderbolt" icon="cs-thunderbolt">
+            <action name="Execute">
+                <execute>cinnamon-settings thunderbolt</execute>
+            </action>
+        </item>
+        <item label="Accessibilité" icon="cs-universal-access">
+            <action name="Execute">
+                <execute>cinnamon-settings accessibility</execute>
+            </action>
+        </item>
+        <item label="Détails du compte" icon="cs-user">
+            <action name="Execute">
+                <execute>cinnamon-settings user</execute>
+            </action>
+        </item>
+        <item label="Fenêtres" icon="cs-windows">
+            <action name="Execute">
+                <execute>cinnamon-settings windows</execute>
+            </action>
+        </item>
+        <item label="Espaces de travail" icon="cs-workspaces">
+            <action name="Execute">
+                <execute>cinnamon-settings workspaces</execute>
+            </action>
+        </item>
+        <item label="Tablette graphique" icon="cs-tablet">
+            <action name="Execute">
+                <execute>cinnamon-settings wacom</execute>
+            </action>
+        </item>
+        <item label="Configuration pour Elementary" icon="elementary">
+            <action name="Execute">
+                <execute>elementary_config</execute>
+            </action>
+        </item>
+        <item label="Reconnaissance des empreintes" icon="enlightenment_fprint">
+            <action name="Execute">
+                <execute>enlightenment_fprint</execute>
+            </action>
+        </item>
+        <item label="Éditeur de palette" icon="enlightenment_paledit">
+            <action name="Execute">
+                <execute>enlightenment_paledit</execute>
+            </action>
+        </item>
+        <item label="Configuration Fcitx 5" icon="/usr/share/icons/hicolor/48x48/apps/fcitx.png">
+            <action name="Execute">
+                <execute>/usr/bin/fcitx5-configtool</execute>
+            </action>
+        </item>
+        <item label="Comptes en ligne" icon="/usr/share/icons/hicolor/scalable/apps/gnome-online-accounts-gtk.svg">
+            <action name="Execute">
+                <execute>gnome-online-accounts-gtk</execute>
+            </action>
+        </item>
+        <item label="Méthode d'entrée" icon="input-keyboard">
+            <action name="Execute">
+                <execute>im-config</execute>
+            </action>
+        </item>
+        <item label="Anthy Dictionary editor" icon="/usr/share/pixmaps/kasumi.png">
+            <action name="Execute">
+                <execute>kasumi</execute>
+            </action>
+        </item>
+        <item label="Configuration du système de KDE" icon="preferences-system">
+            <action name="Execute">
+                <execute>systemsettings</execute>
+            </action>
+        </item>
+        <item label="Personnaliser l'apparence" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-theme.png">
+            <action name="Execute">
+                <execute>lxappearance</execute>
+            </action>
+        </item>
+        <item label="À propos de moi" icon="/usr/share/icons/gnome/48x48/apps/user-info.png">
+            <action name="Execute">
+                <execute>mate-about-me</execute>
+            </action>
+        </item>
+        <item label="Apparence" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-theme.png">
+            <action name="Execute">
+                <execute>mate-appearance-properties</execute>
+            </action>
+        </item>
+        <item label="Outils d'accessibilité" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-accessibility.png">
+            <action name="Execute">
+                <execute>mate-at-properties</execute>
+            </action>
+        </item>
+        <item label="Centre de contrôle" icon="preferences-desktop">
+            <action name="Execute">
+                <execute>mate-control-center</execute>
+            </action>
+        </item>
+        <item label="Applications préférées" icon="preferences-desktop-default-applications">
+            <action name="Execute">
+                <execute>mate-default-applications-properties</execute>
+            </action>
+        </item>
+        <item label="Raccourcis clavier" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-keyboard-shortcuts.png">
+            <action name="Execute">
+                <execute>mate-keybinding-properties</execute>
+            </action>
+        </item>
+        <item label="Notifications d’événements" icon="/usr/share/icons/hicolor/48x48/apps/mate-notification-properties.png">
+            <action name="Execute">
+                <execute>mate-notification-properties</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire d'énergie" icon="/usr/share/icons/hicolor/48x48/apps/mate-power-manager.png">
+            <action name="Execute">
+                <execute>mate-power-preferences</execute>
+            </action>
+        </item>
+        <item label="Économiseur d'écran" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-screensaver.png">
+            <action name="Execute">
+                <execute>mate-screensaver-preferences</execute>
+            </action>
+        </item>
+        <item label="Applications au démarrage" icon="/usr/share/icons/hicolor/48x48/apps/mate-session-properties.png">
+            <action name="Execute">
+                <execute>mate-session-properties</execute>
+            </action>
+        </item>
+        <item label="Souris" icon="input-mouse">
+            <action name="Execute">
+                <execute>mate-mouse-properties</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire d'heure et de date" icon="preferences-system-time">
+            <action name="Execute">
+                <execute>mate-time-admin</execute>
+            </action>
+        </item>
+        <item label="Windows" icon="/usr/share/icons/gnome/48x48/apps/preferences-system-windows.png">
+            <action name="Execute">
+                <execute>mate-window-properties</execute>
+            </action>
+        </item>
+        <item label="Openbox Configuration Manager" icon="/usr/share/pixmaps/obconf.png">
+            <action name="Execute">
+                <execute>obconf</execute>
+            </action>
+        </item>
+        <item label="Assistant de migration Fcitx 5" icon="/usr/share/icons/hicolor/48x48/apps/fcitx.png">
+            <action name="Execute">
+                <execute>fcitx5-migrator</execute>
+            </action>
+        </item>
+        <item label="Préférences de IBus" icon="/usr/share/icons/hicolor/scalable/apps/ibus-setup.svg">
+            <action name="Execute">
+                <execute>ibus-setup</execute>
+            </action>
+        </item>
+        <item label="Paramètres" icon="org.gnome.Settings">
+            <action name="Execute">
+                <execute>gnome-control-center</execute>
+            </action>
+        </item>
+        <item label="Ajustements" icon="org.gnome.tweaks">
+            <action name="Execute">
+                <execute>gnome-tweaks</execute>
+            </action>
+        </item>
+        <item label="Tableau de bord" icon="org.xfce.panel">
+            <action name="Execute">
+                <execute>xfce4-panel --preferences</execute>
+            </action>
+        </item>
+        <item label="Préférences du bureau" icon="user-desktop">
+            <action name="Execute">
+                <execute>pcmanfm --desktop-pref</execute>
+            </action>
+        </item>
+        <item label="Configuration de Picom" icon="preferences-system">
+            <action name="Execute">
+                <execute>picom-conf</execute>
+            </action>
+        </item>
+        <item label="Configuration du système" icon="preferences-system">
+            <action name="Execute">
+                <execute>systemsettings</execute>
+            </action>
+        </item>
+        <item label="Thunar Préférences" icon="org.xfce.thunar">
+            <action name="Execute">
+                <execute>thunar-settings</execute>
+            </action>
+        </item>
+        <item label="Disques et médias amovibles" icon="org.xfce.volman">
+            <action name="Execute">
+                <execute>thunar-volman-settings</execute>
+            </action>
+        </item>
+        <item label="Input Method" icon="/usr/share/uim/pixmaps/uim-icon.png">
+            <action name="Execute">
+                <execute>uim-pref-gtk3</execute>
+            </action>
+        </item>
+        <item label="Paramètres du gestionnaire de presse-papiers" icon="/usr/share/icons/hicolor/48x48/apps/xfce4-clipman-plugin.png">
+            <action name="Execute">
+                <execute>xfce4-clipman-settings</execute>
+            </action>
+        </item>
+        <item label="Profils de couleur" icon="org.xfce.settings.color">
+            <action name="Execute">
+                <execute>xfce4-color-settings</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire d’alimentation" icon="org.xfce.powermanager">
+            <action name="Execute">
+                <execute>xfce4-power-manager-settings</execute>
+            </action>
+        </item>
+        <item label="Économiseur d’écran de Xfce" icon="org.xfce.ScreenSaver">
+            <action name="Execute">
+                <execute>xfce4-screensaver-preferences</execute>
+            </action>
+        </item>
+        <item label="Éditeur de paramètres" icon="org.xfce.settings.editor">
+            <action name="Execute">
+                <execute>xfce4-settings-editor</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de paramètres" icon="org.xfce.settings.manager">
+            <action name="Execute">
+                <execute>xfce4-settings-manager</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de fenêtres" icon="org.xfce.xfwm4">
+            <action name="Execute">
+                <execute>xfwm4-settings</execute>
+            </action>
+        </item>
+        <item label="Peaufinage des fenêtres" icon="org.xfce.xfwm4-tweaks">
+            <action name="Execute">
+                <execute>xfwm4-tweaks-settings</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Utility" label="Utilitaires" icon="applications-utilities">
+        <item label="Clavier visuel" icon="/usr/share/icons/hicolor/scalable/apps/cinnamon-virtual-keyboard.svg">
+            <action name="Execute">
+                <execute>cinnamon-dbus-command ToggleKeyboard</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire d'archives Engrampa" icon="/usr/share/icons/hicolor/32x32/apps/engrampa.png">
+            <action name="Execute">
+                <execute>engrampa</execute>
+            </action>
+        </item>
+        <item label="Visionneuse de disposition de clavier" icon="input-keyboard">
+            <action name="Execute">
+                <execute>kbd-layout-viewer5</execute>
+            </action>
+        </item>
+        <item label="Calculatrice de MATE" icon="/usr/share/icons/gnome/48x48/apps/accessories-calculator.png">
+            <action name="Execute">
+                <execute>mate-calc</execute>
+            </action>
+        </item>
+        <item label="Visionneuse de police MATE" icon="/usr/share/icons/gnome/48x48/apps/preferences-desktop-font.png">
+            <action name="Execute">
+                <execute>mate-font-viewer</execute>
+            </action>
+        </item>
+        <item label="Capture d'écran" icon="/usr/share/icons/gnome/48x48/apps/applets-screenshooter.png">
+            <action name="Execute">
+                <execute>mate-screenshot --interactive</execute>
+            </action>
+        </item>
+        <item label="Outil de recherche MATE" icon="system-search">
+            <action name="Execute">
+                <execute>mate-search-tool</execute>
+            </action>
+        </item>
+        <item label="Fichiers" icon="/usr/share/icons/gnome/48x48/apps/system-file-manager.png">
+            <action name="Execute">
+                <execute>nemo</execute>
+            </action>
+        </item>
+        <item label="Disques" icon="org.gnome.DiskUtility">
+            <action name="Execute">
+                <execute>gnome-disks</execute>
+            </action>
+        </item>
+        <item label="File Roller" icon="org.gnome.FileRoller">
+            <action name="Execute">
+                <execute>file-roller</execute>
+            </action>
+        </item>
+        <item label="Gnote" icon="org.gnome.Gnote">
+            <action name="Execute">
+                <execute>gnote</execute>
+            </action>
+        </item>
+        <item label="Aide" icon="org.gnome.Yelp">
+            <action name="Execute">
+                <execute>yelp</execute>
+            </action>
+        </item>
+        <item label="GtkHash" icon="org.gtkhash.gtkhash">
+            <action name="Execute">
+                <execute>gtkhash</execute>
+            </action>
+        </item>
+        <item label="Sélecteur d'émoticônes" icon="preferences-desktop-emoticons">
+            <action name="Execute">
+                <execute>plasma-emojier</execute>
+            </action>
+        </item>
+        <item label="Spectacle" icon="/usr/share/icons/hicolor/scalable/apps/spectacle.svg">
+            <action name="Execute">
+                <execute>/usr/bin/spectacle</execute>
+            </action>
+        </item>
+        <item label="Mousepad" icon="org.xfce.mousepad">
+            <action name="Execute">
+                <execute>mousepad</execute>
+            </action>
+        </item>
+        <item label="Pluma" icon="/usr/share/icons/gnome/48x48/apps/accessories-text-editor.png">
+            <action name="Execute">
+                <execute>pluma</execute>
+            </action>
+        </item>
+        <item label="Renommer en masse" icon="org.xfce.thunar">
+            <action name="Execute">
+                <execute>thunar --bulk-rename</execute>
+            </action>
+        </item>
+        <item label="Vim" icon="/usr/share/icons/hicolor/48x48/apps/gvim.png">
+            <action name="Execute">
+                <execute>vim</execute>
+            </action>
+        </item>
+        <item label="Xarchiver" icon="/usr/share/icons/hicolor/48x48/apps/xarchiver.png">
+            <action name="Execute">
+                <execute>xarchiver</execute>
+            </action>
+        </item>
+        <item label="À propos de Xfce" icon="org.xfce.about">
+            <action name="Execute">
+                <execute>xfce4-about</execute>
+            </action>
+        </item>
+        <item label="Liste des applications" icon="org.xfce.appfinder">
+            <action name="Execute">
+                <execute>xfce4-appfinder</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de presse-papiers" icon="/usr/share/icons/hicolor/48x48/apps/xfce4-clipman-plugin.png">
+            <action name="Execute">
+                <execute>xfce4-clipman</execute>
+            </action>
+        </item>
+        <item label="Gestionnaire de fichiers" icon="org.xfce.filemanager">
+            <action name="Execute">
+                <execute>exo-open --launch FileManager</execute>
+            </action>
+        </item>
+        <item label="Notes" icon="org.xfce.notes">
+            <action name="Execute">
+                <execute>xfce4-notes</execute>
+            </action>
+        </item>
+        <item label="Exécuter le programme…" icon="org.xfce.appfinder">
+            <action name="Execute">
+                <execute>xfce4-appfinder --collapsed</execute>
+            </action>
+        </item>
+        <item label="Capture d’écran" icon="org.xfce.screenshooter">
+            <action name="Execute">
+                <execute>xfce4-screenshooter</execute>
+            </action>
+        </item>
+        <item label="Émulateur de terminal" icon="org.xfce.terminalemulator">
+            <action name="Execute">
+                <execute>exo-open --launch TerminalEmulator</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="menu-Other" label="Autres" icon="applications-other">
+        <item label="Aide" icon="/usr/share/icons/gnome/48x48/apps/help-browser.png">
+            <action name="Execute">
+                <execute>yelp help:mate-user-guide</execute>
+            </action>
+        </item>
+        <item label="Centre d'aide" icon="/usr/share/icons/gnome/48x48/apps/help-browser.png">
+            <action name="Execute">
+                <execute>khelpcenter</execute>
+            </action>
+        </item>
+        <item label="Centre d'accueil" icon="start-here-kde-plasma">
+            <action name="Execute">
+                <execute>plasma-welcome</execute>
+            </action>
+        </item>
+        </menu>
+
+        <menu id="client-list-menu" />
+        <separator />
+
+        <!-- Retour à Hybryde -->
+        <item label="Retour à Hybryde" icon="user-home">
+            <action name="Execute">
+                <execute>/usr/share/hybryde/scripts/session-x/retour-hybryde.sh</execute>
+            </action>
+        </item>
+        <separator />
+
+        <!-- Openbox -->
+        <item label="Reconfigurer Openbox" icon="/usr/share/pixmaps/openbox.png">
+            <action name="Reconfigure" />
+        </item>
+        <separator />
+
+        <!-- Session -->
+        <menu id="exit" label="Session" icon="system-log-out">
+            <item label="Déconnexion">
+                <action name="Exit" />
+            </item>
+            <item label="Verrouiller" icon="system-lock-screen">
+                <action name="Execute"><execute>slock</execute></action>
+            </item>
+            <item label="Veille" icon="system-suspend">
+                <action name="Execute"><execute>systemctl suspend</execute></action>
+            </item>
+            <item label="Hibernation" icon="system-hibernate">
+                <action name="Execute"><execute>systemctl hibernate</execute></action>
+            </item>
+            <item label="Redémarrer" icon="system-reboot">
+                <action name="Execute"><execute>systemctl reboot</execute></action>
+            </item>
+            <item label="Éteindre" icon="system-shutdown">
+                <action name="Execute"><execute>systemctl poweroff</execute></action>
+            </item>
+        </menu>
+
+    </menu>
+</openbox_menu>

@@ -1,0 +1,425 @@
+
+
+* {
+	margin:0;
+	padding:0;
+}
+body  {
+		
+	/* no reason to expose this extra stuff to the user */
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	user-select:none;
+	cursor:default;
+	font-family:"URW Gothic L", Helvetica, sans-serif;
+	font-size:12px;
+	background: url(images/back.jpg);
+	background-attachment : fixed;
+	text-shadow: 0px -1px 1px #000;
+}
+a {
+	
+	font-size:12px;
+	text-decoration:underline;
+}
+
+a:hover {
+	color:#766033;
+	font-size:12px;
+	text-decoration:none;
+}
+
+
+#container { 
+	
+	margin:30px;
+	border-style: solid;
+
+} 
+ 
+#copyright {
+	font-size:28px;
+	color: #AE9259;
+	border-radius : 30px;
+	width : 950px;
+	height : 20px;
+	margin:74px;
+	padding:26px 12px;
+	
+	
+}
+
+}
+#footer {
+padding : 20px 20px;
+	color:#cbcbcb;
+	text-align:center;
+	height:46px;
+	background:url(images/footerBackground.png) repeat-x left ;
+	margin-top:0px;
+}
+#footer p {
+	background:url(images/footerBackground.png) repeat-x left ;
+	padding:0px 0 0 0;
+}
+.clearfloat { /* this class should be placed on a div or break element and should be the final element before the close of a container that should fully contain a float */
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+
+
+#slideshow {
+	border-style: solid;
+	border-color :#AE9259;
+	border-width :0.2px;
+	
+	border-radius :10px;
+	padding: 77px 0 0 0;
+	margin : 10px;
+
+	position:center;
+	
+	width:1000;
+	height:auto;
+	max-width : 1180px; 
+	min-height:500px;
+	min-width : 1180px;
+	overflow:hidden;
+	-webkit-box-shadow:#CFD2D7 0px 0px 10px;
+	-moz-box-shadow:#CFD2D7 0px 0px 10px;
+	box-shadow:#CFD2D7 0px 0px 10px;
+
+
+}
+#slideshow > div {
+	position:absolute;
+	width:100%;
+	height:100%;
+}
+
+
+
+
+
+
+/* Fixed container for a slide's title */
+.header {
+		display:table; /* this is a bit evil, but it lets us vertically centre stuff */
+	position:center;
+	/* FIXME: better to use position:relative here and for #main.
+	   Need to have a specific maximum height, though,
+	   which isn't working with display:table */
+	margin : 5px;
+	padding:15px 5px;
+	width:1100px;
+	height : 100px;
+	
+	
+}
+
+.header > .slidetitle {
+	background:url(images/blockdefault.gif) repeat-x left ;	
+	border-style: solid;
+	border-color :#CFD2D7;
+	border-width :0.2px;
+	-webkit-box-shadow:#CFD2D70px 0px 10px;
+	-moz-box-shadow:#CFD2D7 0px 0px 10px;
+	box-shadow:#CFD2D7 0px 0px 10px;
+
+	/*margin:10px 25px 10px 25px;*/
+	border-radius : 60px;
+	font-size:30px; /* applies to all lines except first */
+	
+	font-weight:normal;
+	text-align : center ;
+
+	
+	
+}
+.slidetitle:first-line {
+	
+	color:#CFD2D7;
+	font-size:58px; /* TODO: 24px? #############################################################################*/
+	
+}
+
+.main {
+	
+	position:absolute;
+	top:60px; /* 68px + 2px margin */
+	bottom:2px;
+	left:20px;
+	right:20px;
+	min-height:390px; /* 442px (from #slideshow) - 70px - 2px */
+	
+	/* move this to #slideshow if we don't want the background image to move with slides */
+	background-color:#transparent;
+
+}
+
+/*
+A slide's body text goes inside here.
+Inner space is 224px wide.
+*/
+.main > .text {
+	
+	font-size:17px;
+	position:absolute;
+	top:65px;
+	left:5px;
+	width:660px;
+	bottom:35px;
+	min-height:450px; /* 369 - 25 - 15 (for bottom) */
+	overflow:auto;
+	color:#CFD2D7;
+	text-shadow: 10px 10px 9px #000;
+
+
+	
+}
+
+.text > div {
+	
+	border-radius : 10px;
+	margin-bottom:4px;
+	padding:6px 12px;
+
+
+}
+.text > div:last-child {
+	margin-bottom:0px;
+}
+
+.text > div > .subtitle {
+	padding-bottom:2px;
+	margin-bottom:5px;
+	font-size:inherit;
+	font-weight:normal;
+	text-decoration:none;
+	border-bottom:#333333 dotted 1px;
+	
+}
+
+.featured ul {
+	display:table;
+}
+.featured li {
+	display:table-row;
+}
+.featured li > * {
+	padding-bottom:12px;
+}
+.featured li .icon {
+	display:table-cell;
+	width:24px;
+	height:auto;
+	padding-right:12px;
+}
+.featured li .caption {
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.main > .screenshot {
+	border-style: solid;
+	border-color :#AE9259;
+	border-width :0.2px;
+
+	position:absolute;
+	top:95px;
+	right:-2px; /* offsets 2px margin of .main */
+	
+	-webkit-box-shadow:#AE9259 0px 0px 5px;
+	-moz-box-shadow:#AE9259 0px 0px 5px;
+	box-shadow:#AE9259 0px 0px 85px;
+}
+
+.main > .screenshot2 {
+	position:absolute;
+	top:10px;
+	right:65px; /* offsets 2px margin of .main */
+
+}
+
+.main > .screenshot3 {
+	position:absolute;
+	top:430px;
+	right:65px; /* offsets 2px margin of .main */
+}
+
+.main > .screenshot4 {
+	position:absolute;
+	top:350px;
+	right:350px; /* offsets 2px margin of .main */
+}
+/*
+This rule disables drag-and-drop for images.  See bug #448703.
+*/
+img {
+ 	-webkit-user-drag:none;
+}
+
+
+
+/* RTL stuff */
+.rtl {
+	direction:rtl;
+}
+
+.rtl .control-arrow#prev-slide {
+	background-image:url('arrow-next.png');
+	left:19px;
+}
+.rtl .control-arrow#next-slide {
+	background-image:url('arrow-back.png');
+	left:20px; /* 752px - 33px */
+}
+
+.rtl .main > .text {
+	left:auto;
+	right:36px;
+}
+
+.rtl .main > .screenshot {
+	right:normal;
+	left:120px;
+}
+
+.rtl .featured li .icon {
+	padding-right:50px;
+	padding-left:212px;
+}
+
+.fancyNav{
+	/* Affects the UL element */
+	border-width :0.1px;
+		-webkit-box-shadow:#CFD2D7 0px 0px 10px;
+	-moz-box-shadow:#CFD2D7 0px 0px 10px;
+	box-shadow:#CFD2D7 0px 0px 10px;
+
+	border-radius : 30px;
+	margin :10px;
+	overflow: hidden;
+	display: inline-block;
+	height : 40px;
+	background:url(images/blockdefault.gif) repeat-x left ;	
+	font: 30px/1 Purisa,Arial,sans-serif;
+}
+
+.fancyNav li{
+	/* Specifying a fallback color and we define CSS3 gradients for the major browsers: */
+
+	
+
+	/* Adding a 1px inset highlight for a more polished efect: */
+
+	
+	position:relative;
+
+	float: left;
+	list-style: none;
+}
+.fancyNav li:after{
+	font: 60px/1 Purisa,Arial,sans-serif;
+	/* This creates a pseudo element inslide each LI */	
+	border-radius: 30px;
+	content:'.';
+	text-indent:-9999px;
+	overflow:hidden;
+	position:absolute;
+	width:100%;
+	height : 40px;
+	top:0;
+	left:0;
+	z-index:1;
+	opacity:0;
+	
+	/* Gradients! */
+
+	background:url(images/footerBackground2.png) repeat-x left ;
+	/* Creating borders with box-shadow. Useful, as they don't affect the size of the element. */
+
+
+	/* This will create a smooth transition for the opacity property */
+		-webkit-box-shadow:#3B0915 0px 0px 55px;
+	-moz-box-shadow:#3B0915 0px 0px 55px;
+	box-shadow:#3B0915 0px 0px 55px;
+	-moz-transition:0.45s all;
+	-webkit-transition:0.45s all;
+	-o-transition:0.45s all;
+	transition:0.45s all;
+}
+/* Treating the first LI and li:after elements separately */
+
+.fancyNav li:first-child{
+	
+	border-radius: 30px;
+}
+
+.fancyNav li:first-child:after,
+.fancyNav li.selected:first-child:after{
+
+	border-radius:30px;
+}
+
+.fancyNav li:last-child{
+
+	border-radius: 30px;
+}
+
+/* Treating the last LI and li:after elements separately */
+
+.fancyNav li:last-child:after,
+.fancyNav li.selected:last-child:after{
+border-radius: 30px;
+}
+
+.fancyNav li:hover:after,
+.fancyNav li.selected:after,
+.fancyNav li:target:after{
+	/* This property triggers the CSS3 transition */
+	opacity:1;
+	border-radius: 30px;
+}
+
+.fancyNav:hover li.selected:after,
+.fancyNav:hover li:target:after{
+	/* Hides the targeted li when we are hovering on the UL */
+	opacity:0;
+	border-radius: 30px;
+}
+
+.fancyNav li.selected:hover:after,
+.fancyNav li:target:hover:after{
+	opacity:1 !important;
+	border-radius: 30px;
+}
+
+/* Styling the anchor elements */
+
+.fancyNav li a{
+	border-radius: 30px;
+	color:#CFD2D7;
+	display: inline-block;
+	font: 20px/1 "Khmer OS System",Arial,sans-serif;
+	padding: 12px 25px 14px;
+	position: relative;
+	
+	z-index:2;
+	text-decoration:none !important;
+	white-space:nowrap;
+}
+
+.fancyNav a.homeIcon{
+	background:url('../img/home.png') no-repeat center center;
+	display: block;
+	overflow: hidden;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-indent: -9999px;
+	width: 16px;
+}
+
+

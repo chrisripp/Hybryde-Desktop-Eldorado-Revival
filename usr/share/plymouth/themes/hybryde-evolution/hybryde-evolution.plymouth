@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=hybryde-evolution
+Description=This theme is a template to build on
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/hybryde-evolution
+ScriptFile=/usr/share/plymouth/themes/hybryde-evolution/hybryde-evolution.script
+

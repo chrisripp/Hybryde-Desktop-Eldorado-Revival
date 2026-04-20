@@ -1,0 +1,176 @@
+#!/bin/bash
+#========================================================================
+# hyb-logout.sh - Version modernisée pour systemd
+# Original: Olivier Larrieu 2011
+# Modernisation: 2024 - Support systemd et lightdm
+# Interface 100% YAD
+#========================================================================
+
+YAD_COMMON=(
+    --center
+    --borders=14
+    --window-icon="system-log-out"
+    --image="/usr/share/hybryde/logos/hybryde-sm.png" 
+    --title="Hybryde — Session"
+)
+
+#========================================================================
+# CONFIRMATION GÉNÉRIQUE
+#========================================================================
+
+message() {
+    local action="${1:-quitter votre session}"
+    yad "${YAD_COMMON[@]}" \
+        --image="dialog-warning" \
+        --text="<big><b>Confirmation</b></big>\n\nVous êtes sur le point de : <b>$action</b>\n\nContinuer ?" \
+        --button="Annuler:1" \
+        --button="Confirmer:0" \
+        --width=340 \
+        || exit 0
+}
+
+yad_error() {
+    yad "${YAD_COMMON[@]}" \
+        --image="dialog-error" \
+        --text="$1" \
+        --button="OK:0" \
+        --width=320
+}
+
+#========================================================================
+# ACTIONS
+#========================================================================
+
+# Verrouiller la session
+deconnect() {
+    if command -v loginctl &>/dev/null; then
+        loginctl lock-session
+    elif command -v dm-tool &>/dev/null; then
+        dm-tool lock
+    elif command -v gnome-screensaver-command &>/dev/null; then
+        gnome-screensaver-command -l
+    else
+        yad_error "Impossible de verrouiller la session."
+    fi
+}
+
+# Mise en veille
+veille() {
+    message "mettre en veille"
+    if command -v systemctl &>/dev/null; then
+        systemctl suspend
+    elif command -v dbus-send &>/dev/null; then
+        dbus-send --system --print-reply \
+            --dest=org.freedesktop.UPower \
+            /org/freedesktop/UPower \
+            org.freedesktop.UPower.Suspend
+    else
+        yad_error "Impossible de mettre en veille."
+    fi
+}
+
+# Hibernation
+hibernate() {
+    message "hiberner"
+    if command -v systemctl &>/dev/null; then
+        systemctl hibernate
+    else
+        yad_error "Hibernation non supportée sur ce système."
+    fi
+}
+
+# Redémarrage
+restart() {
+    message "redémarrer"
+    if command -v systemctl &>/dev/null; then
+        systemctl reboot
+    elif command -v loginctl &>/dev/null; then
+        loginctl reboot
+    elif command -v dbus-send &>/dev/null; then
+        dbus-send --system --print-reply \
+            --dest=org.freedesktop.ConsoleKit \
+            /org/freedesktop/ConsoleKit/Manager \
+            org.freedesktop.ConsoleKit.Manager.Restart
+    else
+        yad_error "Impossible de redémarrer."
+    fi
+}
+
+# Extinction
+eteindre() {
+    message "éteindre"
+    if command -v systemctl &>/dev/null; then
+        systemctl poweroff
+    elif command -v loginctl &>/dev/null; then
+        loginctl poweroff
+    elif command -v dbus-send &>/dev/null; then
+        dbus-send --system --print-reply \
+            --dest=org.freedesktop.ConsoleKit \
+            /org/freedesktop/ConsoleKit/Manager \
+            org.freedesktop.ConsoleKit.Manager.Stop
+    else
+        yad_error "Impossible d'éteindre."
+    fi
+}
+
+# Déconnexion (quitter la session X)
+logout() {
+    message "se déconnecter"
+    if [ -n "$GNOME_DESKTOP_SESSION_ID" ]; then
+        gnome-session-quit --logout --no-prompt
+    elif [ -n "$KDE_SESSION_VERSION" ]; then
+        qdbus org.kde.ksmserver /KSMServer logout 0 0 0
+    else
+        killall -u "$USER"
+    fi
+}
+
+#========================================================================
+# MENU PRINCIPAL
+#========================================================================
+
+show_menu() {
+    local choice
+    choice=$(yad \
+        --center \
+        --borders=16 \
+        --title="Hybryde — Gestion de session" \
+        --window-icon="system-log-out" \
+        --image="/usr/share/hybryde/logos/hybryde-sm.png" \
+        --list \
+        --text="<big><b>⏻  Gestion de session</b></big>\n\nQue voulez-vous faire ?" \
+        --column="Icône:IMG" \
+        --column="Action" \
+        --column="Description" \
+        "system-lock-screen"   "deconnect"  "Verrouiller la session" \
+        "system-log-out"       "logout"     "Se déconnecter" \
+        "system-suspend"       "veille"     "Mettre en veille" \
+        "system-hibernate"     "hibernate"  "Hiberner" \
+        "system-reboot"        "restart"    "Redémarrer" \
+        "system-shutdown"      "eteindre"   "Éteindre" \
+        --print-column=2 \
+        --separator="" \
+        --width=460 --height=380 \
+        --button="Annuler:1" \
+        --button="OK:0")
+
+    [ $? -ne 0 ] || [ -z "$choice" ] && exit 0
+
+    choice="${choice//|/}"
+    "$choice"
+}
+
+#========================================================================
+# POINT D'ENTRÉE
+#========================================================================
+
+if ! command -v yad &>/dev/null; then
+    echo "✗ yad est requis : sudo apt install yad" >&2
+    exit 1
+fi
+
+if [ -z "$1" ]; then
+    show_menu
+else
+    "$1"
+fi

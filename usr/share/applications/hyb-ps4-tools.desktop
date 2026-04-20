@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=PS4 Tools
+Name[fr]=PS4 Tools
+Comment=PS4 Tools
+Comment[fr]=PS4 Tools
+Exec=/usr/share/hybryde/scripts/ps4-tools.sh
+Icon=/usr/share/hybryde/SquareGlass/Games 1.png
+Terminal=true
+Categories=System;Settings;hybryde
+Keywords=hybryde;status;diagnostic;session;
+StartupNotify=false

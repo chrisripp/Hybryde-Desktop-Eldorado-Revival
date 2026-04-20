@@ -1,0 +1,34 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde Config
+Name[fr]=Configuration Hybryde
+Comment=Configure the Hybryde session (wallpaper, compositor, polkit)
+Comment[fr]=Configure la session Hybryde (fond d'écran, compositeur, polkit)
+Exec=/usr/share/hybryde/scripts/hybryde-config.sh
+Icon=/usr/share/hybryde/SquareGlass/Control Panel 1.png
+Terminal=false
+Categories=System;Settings;DesktopSettings;hybryde
+Keywords=hybryde;config;configuration;fond;écran;compositeur;
+StartupNotify=false
+
+# Actions pour accès direct depuis Cairo-Dock (clic droit)
+Actions=Wallpaper;Compositor;Polkit;
+
+[Desktop Action Wallpaper]
+Name=Fond d'écran
+Name[fr]=Fond d'écran
+Exec=/usr/share/hybryde/scripts/hybryde-config.sh wallpaper
+Icon=preferences-desktop-wallpaper
+
+[Desktop Action Compositor]
+Name=Compositeur
+Name[fr]=Compositeur (Picom)
+Exec=/usr/share/hybryde/scripts/hybryde-config.sh compositor
+Icon=preferences-desktop-display
+
+[Desktop Action Polkit]
+Name=Agent Polkit
+Name[fr]=Agent PolicyKit
+Exec=/usr/share/hybryde/scripts/hybryde-config.sh polkit
+Icon=preferences-system-privacy

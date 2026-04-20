@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde System
+Name[fr]=System Hybryde
+Comment=Diagnostic du system Hybryde
+Comment[fr]=Diagnostic du system Hybryde
+Exec=/usr/share/hybryde/scripts/sys-hybryde-ps4.sh 
+Icon=/usr/share/hybryde/SquareGlass/System Settings.png
+Terminal=false
+Categories=System;Settings;hybryde
+Keywords=hybryde;status;diagnostic;session;
+StartupNotify=false

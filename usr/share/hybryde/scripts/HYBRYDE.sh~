@@ -1,0 +1,229 @@
+#! /bin/bash
+
+last_pid=$(ps -A | tail -1 | cut -c1-5)
+export last_pid=$last_pid
+
+killprocess()
+{
+lis_pid=$(pidof gdu-notification-daemon gvfs-gphoto2-volume-monitor gvfs-gdu-volume-monitor  gvfsd-trash gvfsd-metadata  gvfsd-burn gvfsd gvfs-afc-volume-monitor gnome-screensaver gnome-power-manager gnome-keyring-daemon evolution-alarm-notify dconf-service dbus-launch dbus-daemon )
+
+accueil=$(cat /tmp/hybryde-pid.txt)
+for i in $accueil
+do kill -9 $i
+done
+
+for i in nautilus gnome-settings-daemon tint2 cairo-dock metacity
+do pid=$(pidof $i)
+kill -9 $pid
+done
+}
+
+killprocess_end()
+{
+gvfs_gphoto2_volume_monitor=$(pidof gvfs-gphoto2-volume-monitor)
+gvfs_gdu_volume_monitor=$(pidof gvfs-gdu-volume-monitor) 
+gvfsd_trash=$(pidof gvfsd-trash )
+gvfsd_metadata=$(pidof gvfsd-metadata)
+gvfsd_burn=$(pidof gvfsd-burn)
+gvfsd=$(pidof gvfsd)
+gvfs_afc_volume_monitor=$(pidof gvfs-afc-volume-monitor)
+gnome_screensaver=$(pidof gnome-screensaver)
+gnome_power_manager=$(pidof gnome-power-manager)
+gnome_keyring_daemon=$(pidof gnome-keyring-daemon)
+gconfd_2=$(pidof gconfd-2)
+evolution_alarm_notify=$(pidof evolution-alarm-notify)
+dconf_service=$(pidof dconf-service)
+dbus_launch=$(pidof dbus-launch)
+dbus_daemon=$(pidof dbus-daemon)
+
+list="$gvfs_gphoto2_volume_monitor $gvfs_gdu_volume_monitor $gvfsd_trash $gvfsd_metad$ata $gvfsd_burn $gvfsd $gvfs_afc_volume_monitor $gnome_screensaver $gnome_power_manager $gnome_keyring_daemon $gconfd_2 $evolution_alarm_notify $dconf_service $dbus_launch $dbus_daemon"
+
+for process in $list
+do
+	for i in $lis_pid
+	do
+		if [ "$process" != "$i" ]
+		then
+		kill -9 $process
+		fi
+	done
+done
+
+
+}
+
+exitsession()
+{
+for i in $(ps -A | cut -c1-5)
+	do
+		if [ "$i" -gt "$last_pid" ]
+			then kill -9 $i
+		fi
+done
+}
+
+gnome_panel()
+{
+echo "[general]
+integration = true
+backend = ini
+
+[gnome_session]
+integration = true
+backend = gconf
+
+[kde_session]
+integration = true
+backend = kconfig
+" > /etc/compizconfig/config 
+
+killprocess
+
+dbus-launch --exit-with-session gnome-session --session=gnome-classic
+#;
+killall gnome-session
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+}
+
+unity()
+{
+echo "[general]
+integration = true
+backend = ini
+
+[gnome_session]
+integration = true
+backend = gconf
+
+[kde_session]
+integration = true
+backend = kconfig
+" > /etc/compizconfig/config 
+
+killprocess
+
+gnome-session --autostart=$HOME/.unity_2d-hyb
+
+
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+}
+
+gnome3()
+{
+
+killprocess
+
+dbus-launch --exit-with-session gnome-session ;
+
+last_dbus=$(ps -A | grep dbus-launch |sort -g |tail -1 | cut -c1-5)
+kill -9 $last_dbus
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+}
+
+kde()
+{
+cd $HOME
+
+killprocess
+
+dbus-launch --auto-syntax --exit-with-session  startkde ;
+
+kdeinit4_shutdown 
+
+killall kded4 kdeinit4 klauncher knotify4 kuiserver 
+
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+
+}
+
+
+kill_naut()
+{
+while :
+do
+	   sleep 5
+	if pidof nautilus
+		then
+			pid=$(pidof nautilus)
+			kill -9 $pid
+		else
+			break
+	fi
+done
+}
+
+xfce()
+{
+
+killprocess
+dbus-launch --exit-with-session  xfce4-session ;
+
+for i in xfsettingsd xfconfd  nautilus
+do
+pid=$(pidof $i)
+kill -9 $pid
+done
+
+killprocess_end
+
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+
+
+}
+
+
+
+
+lxde()
+{
+cd $HOME
+
+killprocess
+kill_naut &
+dbus-launch --exit-with-session lxsession ;
+
+killprocess_end
+killall lxpanel lxsession
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+
+}
+
+e17()
+{
+
+killprocess
+
+gsd=$(pidof gnome-settings-daemon)
+kill -9 $gsd
+
+enlightenment_start ;
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+}
+
+openbox()
+{
+
+
+killprocess
+dbus-launch --exit-with-session openbox-session ;
+killprocess_end
+dbus-launch --exit-with-session /usr/share/hybryde/scripts/session-x/hybx-script.sh "no-sound" &
+}
+
+
+fleex()
+{
+cd /usr/share/flex_desktop/
+
+python flex_desktop.py &
+
+}
+
+$1
+
+exit

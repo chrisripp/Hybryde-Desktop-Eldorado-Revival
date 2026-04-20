@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde Menu
+Name[fr]=Menu Hybryde
+Comment=Menu Hybryde
+Comment[fr]=Menu Hybryde
+Exec=/usr/share/hybryde/scripts/change-theme.sh
+Icon=/usr/share/hybryde/SquareGlass/Desktop 3.png
+Terminal=true
+Categories=System;Settings;hybryde
+Keywords=hybryde;status;diagnostic;session;
+StartupNotify=false

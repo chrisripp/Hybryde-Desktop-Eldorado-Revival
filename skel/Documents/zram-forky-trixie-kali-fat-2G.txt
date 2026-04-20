@@ -1,0 +1,119 @@
+                   ZRAM on Forky, Trixie
+                         Very easy
+
+How to set up ZRAM on Debian Forky and Trixie. 
+In this short tutorial, I used feeRnt's sources, 
+which also uses Crashniels' sources. 
+It' patched Wi-Fi and Bluetooth, blackscreen for PS4 Fat, 
+tested it on CUH-1216, CUH-1215, and my own CUH-1116a.
+I added sound through the jack on the PS4 and PS5 controllers. 
+https://github.com/feeRnt/ps4-linux-12xx/releases
+
+The PS4 have 8 Go de RAM.
+Some best practices:
+ZRAM size = 25% to 50% of your physical RAM is generally a good compromise.
+With 8 GB, that's between 2 GB and 4 GB.
+Larger size = more compression but also more CPU usage 
+(ZRAM consumes a bit of CPU to compress/decompress).
+If you already have a swap file on disk (/swapfile 8G), 
+2G of ZRAM is more than enough to absorb small overflows 
+without hitting the disk.
+
+It's recommend to have 2 GB max on your PS4.
+
+Get ready? Follow me.
+
+So You can download the Bzlmage 6.15.4 here:
+https://mega.nz/folder/9woEhZjQ#auFuohUWBy-IiA1ayO6S1w
+The module is present in the bzlmage, but it must be activated. 
+In a terminal or with synaptic installer: zram-tools
+
+Then we will check if everything is correct in our Bzlmage with this command:
+
+1 ls -l /dev/ram*
+
+Checked, we will allocate 2G of ZRAM
+
+2 echo 2G | sudo tee /sys/block/zram0/disksize
+
+3 sudo mkswap /dev/zram0 (already mounted for me ;) )
+
+4 sudo swapon /dev/zram0
+
+Check:
+free -h
+----------------------------------------------------------------------
+Force a little swap (just to test, don't leave it enabled for long 
+if you value your performance):
+
+1 stress --vm 2 --vm-bytes 6G --timeout 30s
+
+(to run a program that allocates a lot of RAM, 
+this forces the system to use swap)
+
+Then run again:
+
+2 sudo swapon --show
+3 cat /sys/block/zram0/compr_data_size
+
+Detailed Statistics
+
+4 cat /sys/block/zram0/stat
+
+This gives all the information (swapped pages, compression, errors).
+----------------------------------------------------------------------
+-----------------Systemd script to configure zram---------------------
+
+sudo nano /etc/systemd/system/zram-swap.service
+
+paste it:
+
+[Unit]
+Description=ZRAM Swap
+DefaultDependencies=no
+After=swap.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/setup-zram.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+-----------------------Script setup-zram.sh----------------------------
+
+#!/bin/bash
+# Taille zram (ici 2 Go)
+SIZE=2G
+
+# Added zram
+echo 1 > /sys/class/zram-control/hot_add
+
+# Config size
+echo $SIZE > /sys/block/zram0/disksize
+
+# Initialise and active swap
+mkswap /dev/zram0
+swapon /dev/zram0
+-----------------------------------------------------------------------
+----------------------Install and active-------------------------------
+
+Save the script in /usr/local/bin/setup-zram.sh and give it execution rights:
+
+sudo chmod +x /usr/local/bin/setup-zram.sh
+
+Reload systemd and enable the service:
+
+sudo systemctl daemon-reload
+sudo systemctl enable zram-swap
+sudo systemctl start zram-swap
+
+
+Check :
+
+swapon --show
+
+
+Easy no?
+Triki1

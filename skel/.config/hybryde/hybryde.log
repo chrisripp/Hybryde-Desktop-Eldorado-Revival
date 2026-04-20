@@ -1,0 +1,36 @@
+2025-12-20 19:45:00,482 - INFO - === Démarrage de Hybryde main.py ===
+2025-12-20 19:45:00,482 - INFO - Utilisateur: tux
+2025-12-20 19:45:00,482 - INFO - Répertoire: /home/tux
+2025-12-20 19:45:00,482 - INFO - Python version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+2025-12-20 19:45:00,485 - INFO - Fichier de configuration trouvé: /home/tux/.config/hybryde/configuration.cfg
+2025-12-20 19:45:00,485 - INFO - Attente du démarrage complet de X11...
+2025-12-20 19:45:05,486 - INFO - Lancement de Hy_menu.py depuis /usr/share/hybryde/scripts/HY-DESKTOP
+2025-12-20 19:45:05,488 - INFO - Hy_menu.py lancé avec succès
+2025-12-20 19:45:05,488 - INFO - === Hy-menu lancé avec succès ===
+2025-12-20 19:54:00,211 - INFO - === Démarrage de Hybryde main.py ===
+2025-12-20 19:54:00,211 - INFO - Utilisateur: tux
+2025-12-20 19:54:00,211 - INFO - Répertoire: /home/tux
+2025-12-20 19:54:00,211 - INFO - Python version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+2025-12-20 19:54:00,213 - INFO - Fichier de configuration trouvé: /home/tux/.config/hybryde/configuration.cfg
+2025-12-20 19:54:00,213 - INFO - Attente du démarrage complet de X11...
+2025-12-20 19:54:05,214 - INFO - Lancement de Hy_menu.py depuis /usr/share/hybryde/scripts/HY-DESKTOP
+2025-12-20 19:54:05,215 - INFO - Hy_menu.py lancé avec succès
+2025-12-20 19:54:05,215 - INFO - === Hy-menu lancé avec succès ===
+2025-12-20 19:54:30,335 - INFO - === Démarrage de Hybryde main.py ===
+2025-12-20 19:54:30,335 - INFO - Utilisateur: tux
+2025-12-20 19:54:30,335 - INFO - Répertoire: /home/tux
+2025-12-20 19:54:30,335 - INFO - Python version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+2025-12-20 19:54:30,350 - INFO - Fichier de configuration trouvé: /home/tux/.config/hybryde/configuration.cfg
+2025-12-20 19:54:30,350 - INFO - Attente du démarrage complet de X11...
+2025-12-20 19:54:35,351 - INFO - Lancement de Hy_menu.py depuis /usr/share/hybryde/scripts/HY-DESKTOP
+2025-12-20 19:54:35,353 - INFO - Hy_menu.py lancé avec succès
+2025-12-20 19:54:35,353 - INFO - === Hy-menu lancé avec succès ===
+2025-12-20 19:56:19,003 - INFO - === Démarrage de Hybryde main.py ===
+2025-12-20 19:56:19,003 - INFO - Utilisateur: tux
+2025-12-20 19:56:19,003 - INFO - Répertoire: /home/tux
+2025-12-20 19:56:19,003 - INFO - Python version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+2025-12-20 19:56:19,010 - INFO - Fichier de configuration trouvé: /home/tux/.config/hybryde/configuration.cfg
+2025-12-20 19:56:19,010 - INFO - Attente du démarrage complet de X11...
+2025-12-20 19:56:24,010 - INFO - Lancement de Hy_menu.py depuis /usr/share/hybryde/scripts/HY-DESKTOP
+2025-12-20 19:56:24,012 - INFO - Hy_menu.py lancé avec succès
+2025-12-20 19:56:24,012 - INFO - === Hy-menu lancé avec succès ===

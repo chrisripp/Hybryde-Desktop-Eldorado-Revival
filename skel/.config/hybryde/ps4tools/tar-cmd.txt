@@ -1,0 +1,1 @@
+sudo tar -cvf /ps4linux.tar.xz --exclude=/ps4linux.tar.xz --exclude=/var/cache --one-file-system / -I "xz -9"

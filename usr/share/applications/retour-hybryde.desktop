@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Retour à Hybryde
+Name[en]=Return to Hybryde
+Comment=Quitter cet environnement et retourner à la session Hybryde
+Exec=/usr/share/hybryde/scripts/session-x/retour-hybryde.sh
+Icon=/usr/share/hybryde/logos/logo_hyb.png
+Terminal=false
+Categories=System;
+Keywords=hybryde;session;retour;logout;
+StartupNotify=false

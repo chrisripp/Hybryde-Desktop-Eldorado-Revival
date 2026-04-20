@@ -1,0 +1,35 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hybryde - Bienvenue
+Name[fr]=Hybryde - Bienvenue
+Comment=Présentation interactive des environnements de bureau Hybryde
+Comment[fr]=Présentation interactive des environnements de bureau Hybryde
+Exec=/usr/share/hybryde/scripts/hybryde-welcome.sh --force
+Icon=/usr/share/hybryde/SquareGlass/square-Hyb.png
+Terminal=false
+Categories=System;Documentation;hybryde
+Keywords=hybryde;welcome;bienvenue;slideshow;aide;
+StartupNotify=false
+
+# Actions clic droit Cairo-Dock
+Actions=Force;Reset;Status;
+
+[Desktop Action Force]
+Name=Afficher le slideshow
+Name[fr]=Afficher le slideshow
+Exec=/usr/share/hybryde/scripts/hybryde-welcome.sh --force
+Icon=media-playback-start
+
+[Desktop Action Reset]
+Name=Réafficher au prochain démarrage
+Name[fr]=Réafficher au prochain démarrage
+Exec=/usr/share/hybryde/scripts/hybryde-welcome.sh --reset
+Icon=view-refresh
+
+[Desktop Action Status]
+Name=Statut (terminal)
+Name[fr]=Statut (terminal)
+Exec=bash -c '/usr/share/hybryde/scripts/hybryde-welcome.sh --status; read -p "Appuyez sur Entrée..."'
+Icon=utilities-terminal
+Terminal=true
