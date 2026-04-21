@@ -3,10 +3,8 @@
 #========================================================================
 # hybryde-ps4-tools.sh — Hybryde PS4 Tools
 # Interface YAD multi-onglets pour outils PS4 Linux
-# Version : 1.1 — 2025
-# Corrections v1.1 :
-#   - Onglet Aide : --list + dclick-action remplacé par --form + BTN
-#     (évite l'ouverture parasite de Thunar/sélecteur de fichiers)
+# Version : 1.1 — 2026
+# By triki1
 #========================================================================
 
 preview_pdf() {
@@ -62,7 +60,7 @@ PROJECT_DIR="$HOME/PROJECT-PS4"
 KERNELS_DIR="$PROJECT_DIR/kernels"
 ORBIS_DIR="$PROJECT_DIR/orbis"
 export PROJECT_DIR KERNELS_DIR ORBIS_DIR
-mkdir -p "$KERNELS_DIR" "$ORBIS_DIR"
+mkdir -p "$KERNELS_DIR"   # orbis créé uniquement à l'installation (do_git_orbis)
 # ── Fichiers d'état inter-dialogs ──────────────────────────────────────
 TAR_EXCLUDES_FILE="$CONF_DIR/tar-excludes.txt"
 TAR_NAME_FILE="$CONF_DIR/tar-name.txt"
@@ -89,11 +87,17 @@ done
 
 run_in_term() {
     local title="$1" cmd="$2"
+    # Tmpscript évite tout problème de guillemets dans les commandes complexes
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-term-XXXX.sh)
+    printf '#!/bin/bash\n%s\necho\nread -rp "[Entrée pour fermer]"\nrm -f "%s"\n' \
+        "$cmd" "$tmpscript" > "$tmpscript"
+    chmod +x "$tmpscript"
     case "$TERM_BIN" in
-        xfce4-terminal) xfce4-terminal --title="$title" -e "bash -c '$cmd; echo; read -rp \"[Entrée pour fermer]\"; exit'" ;;
-        gnome-terminal) gnome-terminal --title="$title" -- bash -c "$cmd; echo; read -rp '[Entrée pour fermer]'; exit" ;;
-        mate-terminal)  mate-terminal  --title="$title" -e "bash -c '$cmd; echo; read -rp \"[Entrée pour fermer]\"; exit'" ;;
-        *)              xterm -title "$title" -e bash -c "$cmd; echo; read -rp '[Entrée pour fermer]'; exit" ;;
+        xfce4-terminal) xfce4-terminal --title="$title" -e "bash $tmpscript" ;;
+        gnome-terminal) gnome-terminal --title="$title" -- bash "$tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="$title" -e "bash $tmpscript" ;;
+        *)              xterm -title "$title" -e bash "$tmpscript" ;;
     esac
 }
 export -f run_in_term
@@ -240,11 +244,11 @@ do_manual_build() {
 export -f do_manual_build
 
 tab_mesa() {
-    yad --plug="$KEY" --tabnum=1 \
+    yad --plug="$KEY" --tabnum=7 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/Download Manager.png" --image-on-top \
-        --text="<big><b>🔧 Compiler Mesa</b></big>
-Outils pour patcher et compiler Mesa / libdrm pour PS4 Linux.
+        --text="<big><b><span foreground='#FFB74D'>🔧 Compiler Mesa</span></b></big>
+<span foreground='#FFCC80'>Outils pour patcher et compiler Mesa / libdrm pour PS4 Linux.</span>
 Sources attendues dans <tt>~/mesa-git</tt>  et  <tt>~/libdrm-git</tt>.\n" \
         \
         --field="":LBL "" \
@@ -376,10 +380,10 @@ do_tar_run() {
 export -f do_tar_run
 
 tab_tar_create() {
-    yad --plug="$KEY" --tabnum=2 \
+    yad --plug="$KEY" --tabnum=1 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/WinZip 1.png" --image-on-top \
-        --text="<big><b>📦 Créer un tar.xz</b></big>
+        --text="<big><b><span foreground='#4FC3F7'>📦 Créer un tar.xz</span></b></big>
 Commande : <tt>sudo tar -cvf /[nom] --exclude=... --one-file-system / -I \"xz -9\"</tt>
 Le tar.xz sera créé à la <b>racine /</b> du système.\n" \
         \
@@ -540,10 +544,10 @@ do_img_show_path() {
 export -f do_img_show_path
 
 tab_img_create() {
-    yad --plug="$KEY" --tabnum=3 \
+    yad --plug="$KEY" --tabnum=2 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/Zip.png" --image-on-top \
-        --text="<big><b>💿 Créer une image .img</b></big>
+        --text="<big><b><span foreground='#CE93D8'>💿 Créer une image .img</span></b></big>
 Sauvegarde complète d'une partition via <tt>dd</tt>.
 Commande : <tt>sudo dd if=[partition] of=[fichier.img] bs=4M status=progress conv=fsync</tt>\n" \
         \
@@ -623,10 +627,10 @@ do_ext_run() {
 export -f do_ext_run
 
 tab_tar_extract() {
-    yad --plug="$KEY" --tabnum=4 \
+    yad --plug="$KEY" --tabnum=3 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/Downloads 2.png" --image-on-top \
-        --text="<big><b>📂 Décompresser un tar.xz</b></big>
+        --text="<big><b><span foreground='#A5D6A7'>📂 Décompresser un tar.xz</span></b></big>
 Commande : <tt>sudo tar -xvJpf [archive] -C [partition] --numeric-owner</tt>\n" \
         \
         --field="":LBL "" \
@@ -703,9 +707,11 @@ read -p 'Entrée...'
 
 # ── Interface YAD ─────────────────────────────────────────────────────
 tab_mount_ps4() {
-    yad --plug="$KEY" --tabnum=5 \
+    yad --plug="$KEY" --tabnum=4 \
         --form \
-        --text="<b>SSD PS4 — Montage rapide</b>
+        --image="/usr/share/hybryde/SquareGlass/My Network Places 7.png" \
+        --image-on-top \
+        --text="<b><span foreground='#EF9A9A'>SSD PS4 — Montage rapide</span></b>
 
 Clé : <tt>$PS4_KEY</tt>
 Partition : <tt>$PS4_DEV</tt>
@@ -724,14 +730,6 @@ export -f tab_mount_ps4
 
 #========================================================================
 # ONGLET 6 — Aide (10 documents configurables)
-#
-# CORRECTION v1.1 : l'ancienne approche --list + --dclick-action ouvrait
-# un sélecteur de fichiers yad (Thunar) au lieu du PDF.
-# Nouvelle approche : --form avec BTN par document → appel direct à
-# preview_pdf (aperçu) ou xdg-open (lecteur par défaut).
-# Les chemins sont expansés à la génération du plug (pas dans un sous-shell)
-# donc pas de problème de portée variable.
-#
 # ─── Modifiez les noms et chemins ici ──────────────────────────────────
 #========================================================================
 
@@ -764,9 +762,6 @@ AIDE_PATHS=(
 
 tab_aide() {
     # Construire les champs --form dynamiquement
-    # Chaque document → un séparateur LBL + deux BTN (Aperçu / Ouvrir)
-    # Les chemins sont expansés ICI (dans le shell principal) et passés
-    # littéralement dans les actions BTN entre guillemets simples échappés.
     local fields=()
 
     for i in "${!AIDE_LABELS[@]}"; do
@@ -789,11 +784,11 @@ tab_aide() {
     local pad=()
     for _ in $(seq 1 6); do pad+=("" "" "" ""); done
 
-    yad --plug="$KEY" --tabnum=6 \
+    yad --plug="$KEY" --tabnum=12 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Notepad 4.png" \
+        --image="/usr/share/hybryde/SquareGlass/My Network Places 7.png" \
         --image-on-top \
-        --text="<big><b>📖 Aide PS4 Linux</b></big>
+        --text="<big><b><span foreground='#B39DDB'>📖 Aide PS4 Linux</span></b></big>
 <small>🔍 Aperçu = texte page 1 + bouton lecteur  •  📂 Ouvrir = lecteur PDF direct</small>\n" \
         "${fields[@]}" \
         "${pad[@]}" \
@@ -901,10 +896,10 @@ do_ssh_ps4() {
 export -f do_ssh_ps4
 
 tab_reseau() {
-    yad --plug="$KEY" --tabnum=7 \
+    yad --plug="$KEY" --tabnum=5 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/My Network Places 7.png" --image-on-top \
-        --text="<big><b>🌐 Réseau / Transfert</b></big>
+        --image="/usr/share/hybryde/SquareGlass/My Network Places 3.png" --image-on-top \
+        --text="<big><b><span foreground='#81D4FA'>🌐 Réseau / Transfert</span></b></big>
 Scan réseau, transfert de fichiers vers /ps4hdd, connexion SSH.\n" \
         \
         --field="":LBL "" \
@@ -1040,10 +1035,10 @@ EOF
 export -f do_cryptsetup_status
 
 tab_diagnostic() {
-    yad --plug="$KEY" --tabnum=8 \
+    yad --plug="$KEY" --tabnum=6 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/Clock 3.png" --image-on-top \
-        --text="<big><b>🔍 Diagnostic / Logs</b></big>
+        --text="<big><b><span foreground='#FFF176'>🔍 Diagnostic / Logs</span></b></big>
 Vérification prérequis, logs kernel en temps réel, état du SSD PS4.\n" \
         \
         --field="":LBL "" \
@@ -1205,10 +1200,10 @@ do_mesa_show_current() {
 export -f do_mesa_show_current
 
 tab_mesa_env() {
-    yad --plug="$KEY" --tabnum=9 \
+    yad --plug="$KEY" --tabnum=8 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Control Panel 1.png" --image-on-top \
-        --text="<big><b>⚙  Variables Mesa / Vulkan</b></big>
+        --image="/usr/share/hybryde/SquareGlass/Go Daddy.png" --image-on-top \
+        --text="<big><b><span foreground='#FFCC80'>⚙  Variables Mesa / Vulkan</span></b></big>
 Définissez RADV_DEBUG, MESA_DEBUG, AMD_DEBUG… sauvegardez des profils
 et lancez une application avec ces variables pré-exportées.\n" \
         \
@@ -1556,10 +1551,10 @@ tab_kernel() {
     local src
     src=$(cat "$KERNEL_SRC_FILE" 2>/dev/null || echo "$HOME/linux-kernel")
 
-    yad --plug="$KEY" --tabnum=10 \
+    yad --plug="$KEY" --tabnum=9 \
         --form --scroll \
         --image="/usr/share/hybryde/SquareGlass/Control Panel 1.png" --image-on-top \
-        --text="<big><b>🐧 Compilation Kernel PS4 (Jaguar / LTO)</b></big>
+        --text="<big><b><span foreground='#C5E1A5'>🐧 Compilation Kernel PS4 (Jaguar / LTO)</span></b></big>
 Optimisation kernel pour GPU GCN 1.1 (Liverpool) de la PS4.
 Sources actuelles : <tt>${src}</tt>\n" \
         \
@@ -1609,69 +1604,307 @@ do_git_ps4_kernel() {
         --text="Sélectionne la branche PS4 :" \
         --column="Branche" \
         "${branches[@]}" \
-        --print-column=1 \
+        --print-column=1 --separator="" \
         --button="Annuler:1" --button="🚀 Télécharger:0" \
         --width=400 --height=280)
     
     [ $? -ne 0 ] || [ -z "$branch" ] && return
-    
+    branch="${branch//|/}"
+
     local dest="$KERNELS_DIR/linux-ps4-$branch"
     [ -d "$dest" ] && yad_confirm "Dossier existant :\n<tt>$dest</tt>\n\nSupprimer et re-télécharger ?" || rm -rf "$dest"
     
     run_in_term "🚀 Git PS4 Kernel — $branch" "
-        cd '$PROJECT_DIR'
-        git clone -b $branch --depth=1 https://github.com/crashniels/linux.git linux-ps4-$branch
-        cd linux-ps4-$branch
+        cd '$KERNELS_DIR'
+        echo '=== Téléchargement kernel PS4 : $branch ==='
+        git clone -b '$branch' --depth=1 https://github.com/crashniels/linux.git linux-ps4-$branch
         echo '=== Sources PS4 Kernel téléchargées ==='
         ls -la
         echo ''
         read -rp '[Entrée pour ouvrir le dossier]'
-        xdg-open .
+        sleep 1 && xdg-open '$KERNELS_DIR/linux-ps4-$branch'
     "
     
     yad_info "✓ Kernel PS4 $branch\n📂 <tt>$dest</tt>"
 }
 export -f do_git_ps4_kernel
-export -f do_git_ps4_kernel do_git_orbis do_open_project_dir tab_git_ps4
+
+#------------------------------------------------------------------------
+# feeRnt/ps4-linux-12xx — kernels PS4 alternatifs
+#------------------------------------------------------------------------
+do_git_feernt_kernel() {
+    # Récupérer les branches dynamiquement depuis l'API GitHub
+    local branches_raw
+    branches_raw=$(curl -s --max-time 8 \
+        "https://api.github.com/repos/feeRnt/ps4-linux-12xx/branches" \
+        2>/dev/null)
+
+    local yad_branches=()
+    if [ -n "$branches_raw" ] && echo "$branches_raw" | python3 -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
+        # Branches récupérées depuis l'API
+        while IFS= read -r b; do
+            [ -n "$b" ] && yad_branches+=("$b")
+        done < <(echo "$branches_raw" | python3 -c "
+import sys, json
+branches = json.load(sys.stdin)
+# master en premier, puis les autres triés
+names = [b['name'] for b in branches]
+if 'master' in names:
+    names.remove('master')
+    names = ['master'] + sorted(names)
+else:
+    names = sorted(names)
+for n in names:
+    print(n)
+" 2>/dev/null)
+    fi
+
+    # Fallback si API inaccessible ou vide
+    if [ "${#yad_branches[@]}" -eq 0 ]; then
+        yad_branches=("master" "ps4-6.1.y" "ps4-6.6.y" "ps4-5.15.y")
+    fi
+
+    local branch
+    branch=$(yad --center --borders=10 \
+        --title="feeRnt — ps4-linux-12xx" \
+        --list \
+        --text="<b>feeRnt/ps4-linux-12xx</b>\nKernels PS4 alternatifs\n<small>https://github.com/feeRnt/ps4-linux-12xx</small>\n\nSélectionne une branche :" \
+        --column="Branche" \
+        "${yad_branches[@]}" \
+        --print-column=1 --separator="" \
+        --button="Annuler:1" --button="🚀 Télécharger:0" \
+        --width=420 --height=320)
+
+    [ $? -ne 0 ] || [ -z "$branch" ] && return
+    branch="${branch//|/}"
+
+    local dest="$KERNELS_DIR/feeRnt-ps4-linux-$branch"
+
+    if [ -d "$dest" ]; then
+        yad_confirm "Dossier existant :\n<tt>$dest</tt>\n\nSupprimer et re-télécharger ?"
+        [ $? -ne 0 ] && return
+        rm -rf "$dest"
+    fi
+
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-feernt-XXXX.sh)
+    cat > "$tmpscript" << FEOF
+#!/bin/bash
+echo '=== Téléchargement feeRnt/ps4-linux-12xx ==='
+echo "Branche : $branch"
+echo "Destination : $dest"
+echo ''
+cd '$KERNELS_DIR'
+git clone -b '$branch' --depth=1 \
+    https://github.com/feeRnt/ps4-linux-12xx.git \
+    "feeRnt-ps4-linux-$branch"
+
+if [ \$? -ne 0 ] || [ ! -d '$dest' ]; then
+    echo ''
+    echo '✗ Clonage échoué'
+    echo '  Vérifiez votre connexion ou que la branche existe.'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+
+echo ''
+echo '=== Contenu ==='
+ls -la '$dest'
+echo ''
+echo "✓ feeRnt ps4-linux-12xx ($branch) téléchargé"
+echo "  $dest"
+echo ''
+read -rp '[Entrée pour ouvrir le dossier]'
+sleep 1 && xdg-open '$dest' 2>/dev/null
+FEOF
+    chmod +x "$tmpscript"
+    case "$TERM_BIN" in
+        xfce4-terminal) xfce4-terminal --title="🐧 feeRnt ps4-linux — $branch" -e "bash $tmpscript" ;;
+        gnome-terminal) gnome-terminal --title="🐧 feeRnt ps4-linux — $branch" -- bash "$tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="🐧 feeRnt ps4-linux — $branch" -e "bash $tmpscript" ;;
+        *)              xterm -title "🐧 feeRnt ps4-linux — $branch" -e bash "$tmpscript" ;;
+    esac
+
+    sleep 1
+    [ -d "$dest" ] && \
+        yad_info "✓ feeRnt/ps4-linux-12xx ($branch) téléchargé\n📂 <tt>$dest</tt>"
+}
+export -f do_git_feernt_kernel
 do_git_orbis() {
-    run_in_term "🚀 Git Orbis + Dépendances" "
-        cd '$PROJECT_DIR'
-        
-        # Check dépendances
-        echo '=== Vérification dépendances Orbis ==='
-        deps=(meson ninja-build pkg-config git python3 python3-pip cmake)
-        missing=()
-        for dep in \"\${deps[@]}\"; do
-            if ! command -v \$dep >/dev/null 2>&1; then
-                missing+=(\$dep)
-            fi
-        done
-        
-        if [ \${#missing[@]} -gt 0 ]; then
-            echo 'INSTALLER : sudo apt install' \"\${missing[@]}\"
-            read -rp 'Installer ? (y/N)'
-            [ \"\$REPLY\" = 'y' ] && sudo apt update && sudo apt install -y \"\${missing[@]}\"
-        fi
-        
-        # Clone Orbis
-        echo ''
-        echo '=== Téléchargement Orbis ==='
-        rm -rf orbis
-        git clone https://github.com/jpd0101/orbis.git
-        cd orbis
-        
-        echo ''
-        echo '=== Orbis installé ==='
-        ls -la
-        echo ''
-        read -rp '[Entrée pour ouvrir]'
-        xdg-open .
-    "
-    
-    yad_info "✓ Orbis téléchargé\n📂 <tt>$ORBIS_DIR</tt>"
+    local out
+    out=$(yad --center --borders=10 \
+        --title="OpenOrbis PS4 Toolchain" \
+        --form \
+        --text="<b>Installer OpenOrbis Toolchain</b>\n\n<small>Télécharge la dernière release automatiquement depuis GitHub\nhttps://github.com/OpenOrbis/OpenOrbis-PS4-Toolchain</small>\n" \
+        --field="Nom du dossier :":TEXT "Orbis" \
+        --button="Annuler:1" --button="🚀 Installer:0" \
+        --width=540)
+    [ $? -ne 0 ] || [ -z "$out" ] && return
+
+    local dest_name
+    dest_name=$(echo "$out" | cut -d'|' -f1)
+    dest_name="${dest_name//|/}"
+    [ -z "$dest_name" ] && dest_name="Orbis"
+    local dest="$PROJECT_DIR/$dest_name"
+
+    # Heredoc direct — bypasse run_in_term pour éviter les problèmes
+    # d'interprétation des variables imbriquées et du Python inline
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-orbis-XXXX.sh)
+    cat > "$tmpscript" << ORBEOF
+#!/bin/bash
+set -e
+cd '$PROJECT_DIR'
+
+echo '=== Installation OpenOrbis PS4 Toolchain ==='
+echo "Destination : $dest"
+echo ''
+
+echo '--- Dépendances ---'
+sudo apt-get update -qq
+sudo apt-get install -y clang lld make curl tar python3 2>&1 | tail -5
+
+# libssl1.1 requis par PkgTool.Core (.NET — incompatible avec libssl3)
+if ! dpkg -l libssl1.1 2>/dev/null | grep -q '^ii'; then
+    echo '  → Installation libssl1.1 (requis par PkgTool.Core)...'
+    TMP_SSL=\$(mktemp /tmp/libssl1.1-XXXX.deb)
+    curl -L --progress-bar \
+        "http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u5_amd64.deb" \
+        -o "\$TMP_SSL"
+    sudo dpkg -i "\$TMP_SSL" 2>&1 | tail -3
+    rm -f "\$TMP_SSL"
+fi
+
+# Variable DOTNET requise pour libicu78 (Forky n'a pas libicu66)
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+grep -q 'DOTNET_SYSTEM_GLOBALIZATION_INVARIANT' "\$HOME/.bashrc" || \
+    echo 'export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1' >> "\$HOME/.bashrc"
+echo '✓ Dépendances OK'
+echo ''
+
+echo '--- Récupération de la dernière release ---'
+API_URL="https://api.github.com/repos/OpenOrbis/OpenOrbis-PS4-Toolchain/releases/latest"
+JSON=\$(curl -s "\$API_URL")
+if [ -z "\$JSON" ] || echo "\$JSON" | grep -q '"message".*"Not Found"'; then
+    echo '✗ Impossible de joindre l'\''API GitHub'
+    echo '  Vérifiez votre connexion internet'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+
+VERSION=\$(echo "\$JSON" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tag_name','?'))" 2>/dev/null)
+echo "Version détectée : \$VERSION"
+
+DOWNLOAD_URL=\$(echo "\$JSON" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+assets = data.get('assets', [])
+# Priorité 1 : contient 'linux' + .tar.gz
+for asset in assets:
+    name = asset['name'].lower()
+    if 'linux' in name and name.endswith('.tar.gz'):
+        print(asset['browser_download_url']); break
+else:
+    # Priorité 2 : tout .tar.gz sauf windows/mac/darwin/osx
+    for asset in assets:
+        name = asset['name'].lower()
+        skip = any(x in name for x in ['windows', 'win', 'mac', 'darwin', 'osx', 'macos'])
+        if name.endswith('.tar.gz') and not skip:
+            print(asset['browser_download_url']); break
+    else:
+        # Priorité 3 : premier .tar.gz disponible
+        for asset in assets:
+            if asset['name'].lower().endswith('.tar.gz'):
+                print(asset['browser_download_url']); break
+" 2>/dev/null)
+
+if [ -z "\$DOWNLOAD_URL" ]; then
+    echo '✗ Aucun fichier .tar.gz trouvé dans la release'
+    echo '  Assets disponibles :'
+    echo "\$JSON" | python3 -c "
+import sys, json
+for a in json.load(sys.stdin).get('assets',[]): print('  -', a['name'])
+" 2>/dev/null
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+echo "URL : \$DOWNLOAD_URL"
+echo ''
+
+echo '--- Téléchargement ---'
+curl -L --progress-bar "\$DOWNLOAD_URL" -o /tmp/toolchain.tar.gz
+if [ ! -s /tmp/toolchain.tar.gz ]; then
+    echo '✗ Téléchargement échoué ou fichier vide'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+SIZE=\$(stat -c%s /tmp/toolchain.tar.gz)
+echo "Taille : \$(numfmt --to=iec \$SIZE 2>/dev/null || echo \$SIZE octets)"
+if [ "\$SIZE" -lt 500000 ]; then
+    echo '✗ Fichier trop petit — probablement une erreur'
+    rm -f /tmp/toolchain.tar.gz
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+echo ''
+
+echo '--- Extraction ---'
+rm -rf '$dest'
+mkdir -p '$dest'
+tar -xzf /tmp/toolchain.tar.gz -C '$dest' --strip-components=1 2>&1 || \
+    tar -xzf /tmp/toolchain.tar.gz -C '$dest' 2>&1
+rm -f /tmp/toolchain.tar.gz
+echo '✓ Extraction terminée'
+echo ''
+
+echo '--- Configuration .bashrc ---'
+BASHRC="\$HOME/.bashrc"
+grep -q 'OO_PS4_TOOLCHAIN' "\$BASHRC" || \
+    echo "export OO_PS4_TOOLCHAIN='$dest'" >> "\$BASHRC"
+grep -q '$dest/bin/linux' "\$BASHRC" || \
+    echo "export PATH=\"\\\$PATH:$dest/bin/linux\"" >> "\$BASHRC"
+export OO_PS4_TOOLCHAIN='$dest'
+export PATH="\$PATH:$dest/bin/linux"
+echo '✓ Variables ajoutées dans ~/.bashrc'
+echo "  OO_PS4_TOOLCHAIN=$dest"
+echo ''
+
+echo '--- Contenu du SDK ---'
+ls -la '$dest'
+echo ''
+
+if [ -d '$dest/samples/hello_world' ]; then
+    echo '--- Test compilation hello_world ---'
+    cd '$dest/samples/hello_world'
+    make 2>&1 && echo '✓ Compilation réussie 🎉' || echo '⚠ Compilation échouée (ignoré)'
+    echo ''
+fi
+
+echo '============================================'
+echo "✓ OpenOrbis \$VERSION installé dans :"
+echo "  $dest"
+echo ''
+echo 'Pour utiliser dans un nouveau terminal :'
+echo '  source ~/.bashrc'
+echo '============================================'
+echo ''
+read -rp '[Entrée pour ouvrir le dossier SDK]'
+sleep 1 && xdg-open '$dest' 2>/dev/null
+ORBEOF
+    chmod +x "$tmpscript"
+    case "$TERM_BIN" in
+        xfce4-terminal) xfce4-terminal --title="🚀 Installation OpenOrbis" -e "bash $tmpscript" ;;
+        gnome-terminal) gnome-terminal --title="🚀 Installation OpenOrbis" -- bash "$tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="🚀 Installation OpenOrbis" -e "bash $tmpscript" ;;
+        *)              xterm -title "🚀 Installation OpenOrbis" -e bash "$tmpscript" ;;
+    esac
+
+    sleep 1
+    if [ -d "$dest" ]; then
+        yad_info "✓ OpenOrbis installé\n📂 <tt>$dest</tt>\n\nRechargez votre terminal ou : <tt>source ~/.bashrc</tt>"
+    fi
 }
 export -f do_git_orbis
-export -f do_git_ps4_kernel do_git_orbis do_open_project_dir tab_git_ps4
 
 do_git_payloads() {
     local dest="$PROJECT_DIR/ps4-linux-payloads"
@@ -1709,7 +1942,7 @@ do_git_payloads() {
         ls -la
         echo ''
         read -rp '[Entrée pour ouvrir le dossier]'
-        xdg-open '$dest'
+        sleep 1 && xdg-open '$dest'
     "
     yad_info "✓ PS4 Linux Payloads compilés\n📂 <tt>$dest</tt>"
 }
@@ -1771,65 +2004,983 @@ Le fichier vram.txt vous permet de modifier la VRAM via un fichier texte.
 }
 export -f do_payloads_readme
 
+#------------------------------------------------------------------------
+# 1. ps4-kexec — le payload kexec pour booter Linux depuis la PS4
+#------------------------------------------------------------------------
+do_git_kexec() {
+    local dest="$PROJECT_DIR/ps4-kexec"
+
+    if [ -d "$dest" ]; then
+        yad_confirm "Dossier existant :\n<tt>$dest</tt>\n\nRe-télécharger depuis zéro ?"
+        if [ $? -eq 0 ]; then
+            rm -rf "$dest"
+        else
+            run_in_term "🔧 Recompiler ps4-kexec" "
+                cd '$dest'
+                echo '=== Recompilation ps4-kexec ==='
+                make clean 2>/dev/null; make
+                echo ''
+                echo '=== Fichiers produits ==='
+                ls -lh *.elf *.bin 2>/dev/null || ls -lh
+                echo ''
+                read -rp '[Entrée pour fermer]'
+            "
+            return
+        fi
+    fi
+
+    run_in_term "🚀 Git + Compilation ps4-kexec" "
+        cd '$PROJECT_DIR'
+        echo '=== Téléchargement ps4-kexec ==='
+        git clone https://github.com/ps4boot/ps4-kexec
+        echo ''
+        echo '=== Vérification dépendances ==='
+        for dep in make gcc git; do
+            command -v \$dep >/dev/null 2>&1 \
+                && echo \"  ✓ \$dep\" \
+                || echo \"  ✗ \$dep manquant — sudo apt install \$dep\"
+        done
+        echo ''
+        echo '=== Compilation ==='
+        cd ps4-kexec && make
+        echo ''
+        echo '=== Fichiers produits ==='
+        ls -lh *.elf *.bin 2>/dev/null || ls -lh
+        echo ''
+        echo 'NOTE : utilisez le .elf avec GoldHEN v2.4b18.5/v2.4b18.6 BinLoader'
+        echo ''
+        read -rp '[Entrée pour ouvrir le dossier]'
+        sleep 1 && xdg-open '$dest'
+    "
+    yad_info "✓ ps4-kexec compilé\n📂 <tt>$dest</tt>\n\n<small>Utilisez le .elf avec GoldHEN BinLoader</small>"
+}
+export -f do_git_kexec
+
+#------------------------------------------------------------------------
+# 2. fail0verflow/ps4-linux — fork original de référence
+#------------------------------------------------------------------------
+do_git_fail0verflow() {
+    local dest="$KERNELS_DIR/ps4-linux-fail0verflow"
+
+    if [ -d "$dest" ]; then
+        yad_confirm "Dossier existant :\n<tt>$dest</tt>\n\nMettre à jour (git pull) ?"
+        if [ $? -eq 0 ]; then
+            run_in_term "🔄 Update fail0verflow/ps4-linux" "
+                cd '$dest'
+                echo '=== git pull ==='
+                git pull
+                echo ''
+                echo '=== Branches disponibles ==='
+                git branch -a | head -20
+                echo ''
+                read -rp '[Entrée pour fermer]'
+            "
+        fi
+        return
+    fi
+
+    local branch
+    branch=$(yad --center --borders=10 \
+        --title="fail0verflow/ps4-linux — Branche" \
+        --list \
+        --text="<b>fail0verflow/ps4-linux</b>\nFork original PS4 Linux — référence historique.\nUtile pour récupérer des configs .config ou comparer des patchs.\n\nChoisissez la branche :" \
+        --column="Branche" \
+        --column="Description" \
+        "master"    "Branche principale" \
+        "ps4"       "Branche PS4 spécifique" \
+        --print-column=1 --separator="" \
+        --button="Annuler:1" --button="🚀 Télécharger:0" \
+        --width=500 --height=240)
+    [ $? -ne 0 ] || [ -z "$branch" ] && return
+    branch="${branch//|/}"
+
+    run_in_term "🚀 Git fail0verflow/ps4-linux — $branch" "
+        cd '$KERNELS_DIR'
+        echo '=== Téléchargement fail0verflow/ps4-linux (shallow) ==='
+        echo 'Dépôt volumineux — cela peut prendre plusieurs minutes...'
+        echo ''
+        git clone -b '$branch' --depth=1 https://github.com/fail0verflow/ps4-linux ps4-linux-fail0verflow
+        echo ''
+        echo '=== Configs .config disponibles ==='
+        find '$dest' -name '.config*' 2>/dev/null | head -10
+        echo ''
+        echo '=== Contenu ==='
+        ls -la '$dest' 2>/dev/null
+        echo ''
+        read -rp '[Entrée pour ouvrir le dossier]'
+        sleep 1 && xdg-open '$dest' 2>/dev/null
+    "
+    yad_info "✓ fail0verflow/ps4-linux téléchargé\n📂 <tt>$dest</tt>"
+}
+export -f do_git_fail0verflow
+
+#------------------------------------------------------------------------
+# GoldHEN — télécharger la dernière release
+#------------------------------------------------------------------------
+do_git_goldhen() {
+    local dest="$PROJECT_DIR/GoldHEN"
+
+    local out
+    out=$(yad --center --borders=10 \
+        --title="GoldHEN — Dernière release" \
+        --form \
+        --text="<b>Télécharger la dernière release de GoldHEN</b>\n\n<small>Source : https://github.com/GoldHEN/GoldHEN/releases\nLes fichiers seront téléchargés dans :\n<tt>$PROJECT_DIR/GoldHEN/</tt></small>\n" \
+        --field="Dossier destination :":TEXT "$PROJECT_DIR/GoldHEN" \
+        --button="Annuler:1" --button="🚀 Télécharger:0" \
+        --width=580)
+    [ $? -ne 0 ] || [ -z "$out" ] && return
+
+    dest=$(echo "$out" | cut -d'|' -f1)
+    dest="${dest//|/}"
+    [ -z "$dest" ] && dest="$PROJECT_DIR/GoldHEN"
+
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-goldhen-XXXX.sh)
+    cat > "$tmpscript" << GHEOF
+#!/bin/bash
+echo '=== Téléchargement GoldHEN — dernière release ==='
+echo "Destination : $dest"
+echo ''
+
+if ! command -v curl >/dev/null 2>&1; then
+    echo '✗ curl requis : sudo apt install curl'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+
+echo '--- Récupération infos release ---'
+# /releases (sans /latest) retourne TOUTES les releases y compris pre-releases
+# On prend la première (la plus récente), qu'elle soit stable ou pre-release
+API_URL="https://api.github.com/repos/GoldHEN/GoldHEN/releases"
+JSON_ALL=\$(curl -s "\$API_URL")
+if [ -z "\$JSON_ALL" ]; then
+    echo '✗ Impossible de joindre l'\''API GitHub'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+
+# Extraire la première release (index 0) — la plus récente
+JSON=\$(echo "\$JSON_ALL" | python3 -c "
+import sys, json
+releases = json.load(sys.stdin)
+if not releases:
+    print('{}')
+else:
+    # Prendre la toute première release (pre-release ou stable)
+    import json as j
+    print(j.dumps(releases[0]))
+" 2>/dev/null)
+
+VERSION=\$(echo "\$JSON" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+pre = '(pre-release)' if d.get('prerelease') else '(stable)'
+print(d.get('tag_name', '?'), pre)
+" 2>/dev/null)
+echo "Version : \$VERSION"
+echo ''
+
+# Lister tous les assets
+echo '--- Assets disponibles ---'
+ASSETS=\$(echo "\$JSON" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for a in data.get('assets', []):
+    print(a['browser_download_url'], a['name'], a.get('size', 0))
+" 2>/dev/null)
+
+if [ -z "\$ASSETS" ]; then
+    echo '✗ Aucun asset trouvé dans la release'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+
+echo "\$ASSETS" | while read url name size; do
+    echo "  - \$name  (\$size octets)"
+done
+echo ''
+
+echo '--- Téléchargement de tous les fichiers ---'
+mkdir -p '$dest'
+cd '$dest'
+
+echo "\$ASSETS" | while read url name size; do
+    echo "Téléchargement : \$name"
+    curl -L --progress-bar "\$url" -o "\$name"
+    if [ -s "\$name" ]; then
+        echo "  ✓ \$name"
+    else
+        echo "  ✗ Échec : \$name"
+    fi
+    echo ''
+done
+
+echo ''
+echo '=== Contenu du dossier GoldHEN ==='
+ls -lh '$dest'
+echo ''
+echo "✓ GoldHEN \$VERSION téléchargé dans :"
+echo "  $dest"
+echo ''
+read -rp '[Entrée pour ouvrir le dossier]'
+sleep 1 && xdg-open '$dest' 2>/dev/null
+GHEOF
+    chmod +x "$tmpscript"
+    case "$TERM_BIN" in
+        xfce4-terminal) xfce4-terminal --title="🎮 GoldHEN Release" -e "bash $tmpscript" ;;
+        gnome-terminal) gnome-terminal --title="🎮 GoldHEN Release" -- bash "$tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="🎮 GoldHEN Release" -e "bash $tmpscript" ;;
+        *)              xterm -title "🎮 GoldHEN Release" -e bash "$tmpscript" ;;
+    esac
+
+    sleep 1
+    [ -d "$dest" ] && ls "$dest"/*.bin "$dest"/*.elf 2>/dev/null | head -3 && \
+        yad_info "✓ GoldHEN téléchargé\n📂 <tt>$dest</tt>"
+}
+export -f do_git_goldhen
+
+#------------------------------------------------------------------------
+# 3. Préparation clé USB de boot PS4
+#------------------------------------------------------------------------
+do_prepare_usb() {
+    # Détecter les clés USB (partitions FAT sur périphériques USB)
+    local usb_list=()
+    while IFS= read -r line; do
+        local dev size fstype tran
+        dev=$(echo "$line"    | awk '{print $1}')
+        size=$(echo "$line"   | awk '{print $2}')
+        fstype=$(echo "$line" | awk '{print $3}')
+        tran=$(echo "$line"   | awk '{print $4}')
+        [ -z "$dev" ] && continue
+        [ "$tran" != "usb" ] && continue
+        usb_list+=("/dev/$dev" "${size}  |  ${fstype:-—}")
+    done < <(lsblk -ln -o NAME,SIZE,FSTYPE,TRAN 2>/dev/null | grep -v "^loop")
+
+    if [ "${#usb_list[@]}" -eq 0 ]; then
+        yad_err "Aucune clé USB détectée.\nConnectez la clé USB et réessayez.\n\n<small>Vérifiez avec : lsblk -o NAME,SIZE,FSTYPE,TRAN</small>"
+        return
+    fi
+
+    local sel_dev
+    sel_dev=$(yad --center --borders=10 \
+        --title="Sélectionner la clé USB" \
+        --list \
+        --text="<b>Préparer une clé USB de boot PS4</b>\n\nSélectionnez la partition USB cible :\n⚠️  Les fichiers existants dans <tt>/boot</tt> seront remplacés." \
+        --column="Partition" \
+        --column="Taille  |  FS" \
+        "${usb_list[@]}" \
+        --print-column=1 --separator="" \
+        --button="Annuler:1" --button="Sélectionner:0" \
+        --width=560 --height=300)
+    [ $? -ne 0 ] || [ -z "$sel_dev" ] && return
+    sel_dev="${sel_dev//|/}"
+
+    # Chercher bzImage dans le projet
+    local bzimage_default=""
+    for k in "$KERNELS_DIR"/*/arch/x86/boot/bzImage; do
+        [ -f "$k" ] && bzimage_default="$k" && break
+    done
+    # Fallback : sources kernel Onglet 10
+    if [ -z "$bzimage_default" ]; then
+        local kdir
+        kdir=$(cat "$CONF_DIR/kernel-src-dir.txt" 2>/dev/null)
+        [ -f "$kdir/arch/x86/boot/bzImage" ] && bzimage_default="$kdir/arch/x86/boot/bzImage"
+    fi
+
+    # Chercher initramfs
+    local initramfs_default=""
+    [ -f "$PROJECT_DIR/ps4-linux-payloads/linux/initramfs.cpio.gz" ] && \
+        initramfs_default="$PROJECT_DIR/ps4-linux-payloads/linux/initramfs.cpio.gz"
+
+    local out
+    out=$(yad --center --borders=10 \
+        --title="Fichiers à copier sur la clé USB" \
+        --form \
+        --text="<b>Préparation clé USB PS4</b>\n\nLa structure <tt>boot/</tt> sera créée à la racine de la clé.\nLaissez vide pour ne pas copier le fichier.\n" \
+        --field="Clé USB (partition) :":RO "$sel_dev" \
+        --field="bzImage :":FL "${bzimage_default:-$PROJECT_DIR/}" \
+        --field="initramfs.cpio.gz :":FL "${initramfs_default:-$PROJECT_DIR/}" \
+        --field="Créer bootargs.txt :":CHK "FALSE" \
+        --field="Créer vram.txt :":CHK "FALSE" \
+        --button="Annuler:1" --button="🚀 Préparer la clé:0" \
+        --width=680)
+    [ $? -ne 0 ] || [ -z "$out" ] && return
+
+    IFS='|' read -r _dev bzimage_src initramfs_src do_bootargs do_vram <<< "$out"
+    bzimage_src="${bzimage_src//|/}"
+    initramfs_src="${initramfs_src//|/}"
+
+    # Valider les fichiers sélectionnés
+    local copy_bz="" copy_init=""
+    [ -f "$bzimage_src" ]   && copy_bz="$bzimage_src"
+    [ -f "$initramfs_src" ] && copy_init="$initramfs_src"
+
+    if [ -z "$copy_bz" ] && [ -z "$copy_init" ] && \
+       [ "$do_bootargs" != "TRUE" ] && [ "$do_vram" != "TRUE" ]; then
+        yad_err "Aucun fichier à copier sélectionné."
+        return
+    fi
+
+    # Valeurs bootargs / vram si demandées
+    local bootargs_val="" vram_val=""
+    if [ "$do_bootargs" = "TRUE" ] || [ "$do_vram" = "TRUE" ]; then
+        local bv_out
+        bv_out=$(yad --center --borders=10 \
+            --title="Contenu des fichiers texte" \
+            --form \
+            --text="<b>Contenu des fichiers optionnels</b>\n\n<small>bootargs.txt : arguments passés au kernel\nvram.txt     : taille VRAM en Mo (ex: 256)</small>\n" \
+            --field="bootargs.txt :":TEXT "amdgpu.cik_support=1 amdgpu.si_support=1 amdgpu.dc=0 mitigations=off nopti" \
+            --field="vram.txt (Mo) :":TEXT "256" \
+            --button="Annuler:1" --button="OK:0" \
+            --width=700)
+        [ $? -ne 0 ] || [ -z "$bv_out" ] && return
+        bootargs_val=$(echo "$bv_out" | cut -d'|' -f1)
+        vram_val=$(echo "$bv_out"     | cut -d'|' -f2)
+    fi
+
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-usb-XXXX.sh)
+    cat > "$tmpscript" << UEOF
+#!/bin/bash
+set -e
+echo '=== Préparation clé USB boot PS4 ==='
+echo "Partition : $sel_dev"
+echo ''
+
+# Monter la clé USB si pas encore montée
+MNT=\$(lsblk -no MOUNTPOINT '$sel_dev' 2>/dev/null | head -1 | tr -d ' ')
+MOUNTED_BY_US=0
+
+if [ -z "\$MNT" ]; then
+    MNT=\$(mktemp -d /tmp/ps4usb-XXXX)
+    echo "Montage temporaire sur \$MNT ..."
+    sudo mount '$sel_dev' "\$MNT" 2>/dev/null || {
+        echo "ERREUR : impossible de monter $sel_dev"
+        read -rp '[Entrée pour fermer]'
+        exit 1
+    }
+    MOUNTED_BY_US=1
+fi
+
+echo "Point de montage : \$MNT"
+echo ''
+
+# Créer la structure boot/
+echo '--- Création du dossier boot/ ---'
+sudo mkdir -p "\$MNT/boot"
+
+# Copier bzImage
+$([ -n "$copy_bz" ] && echo "echo '--- Copie bzImage ---'
+sudo cp '$copy_bz' \"\$MNT/boot/bzImage\"
+echo '  ✓ bzImage copié'")
+
+# Copier initramfs
+$([ -n "$copy_init" ] && echo "echo '--- Copie initramfs.cpio.gz ---'
+sudo cp '$copy_init' \"\$MNT/boot/initramfs.cpio.gz\"
+echo '  ✓ initramfs.cpio.gz copié'")
+
+# bootargs.txt
+$([ "$do_bootargs" = "TRUE" ] && echo "echo '--- Création bootargs.txt ---'
+echo '$bootargs_val' | sudo tee \"\$MNT/boot/bootargs.txt\" >/dev/null
+echo '  ✓ bootargs.txt créé'")
+
+# vram.txt
+$([ "$do_vram" = "TRUE" ] && echo "echo '--- Création vram.txt ---'
+echo '$vram_val' | sudo tee \"\$MNT/boot/vram.txt\" >/dev/null
+echo '  ✓ vram.txt créé'")
+
+echo ''
+echo '=== Contenu de la clé USB (/boot) ==='
+ls -lh "\$MNT/boot/" 2>/dev/null
+
+sync
+echo ''
+echo '✓ Synchronisation OK — vous pouvez retirer la clé.'
+
+if [ \$MOUNTED_BY_US -eq 1 ]; then
+    sudo umount "\$MNT" 2>/dev/null
+    rmdir "\$MNT" 2>/dev/null
+fi
+
+echo ''
+read -rp '[Entrée pour fermer]'
+UEOF
+    chmod +x "$tmpscript"
+    case "$TERM_BIN" in
+        xfce4-terminal) xfce4-terminal --title="Préparer clé USB PS4" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+        gnome-terminal) gnome-terminal --title="Préparer clé USB PS4" -- bash -c "$tmpscript; rm -f $tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="Préparer clé USB PS4" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+        *)              xterm -title "Préparer clé USB PS4" -e bash -c "$tmpscript; rm -f $tmpscript" ;;
+    esac
+}
+export -f do_prepare_usb
+
+#------------------------------------------------------------------------
+# 4. Transfert FTP vers la PS4 (bzImage + initramfs → /data/linux/boot)
+#------------------------------------------------------------------------
+PS4_FTP_IP_FILE="$CONF_DIR/ps4-ftp-ip.txt"
+export PS4_FTP_IP_FILE
+
+do_ftp_transfer() {
+    local last_ip
+    last_ip=$(cat "$PS4_FTP_IP_FILE" 2>/dev/null || echo "192.168.1.")
+
+    # Chercher bzImage dans le projet
+    local bzimage_default=""
+    for k in "$KERNELS_DIR"/*/arch/x86/boot/bzImage; do
+        [ -f "$k" ] && bzimage_default="$k" && break
+    done
+    local kdir; kdir=$(cat "$CONF_DIR/kernel-src-dir.txt" 2>/dev/null)
+    [ -z "$bzimage_default" ] && [ -f "$kdir/arch/x86/boot/bzImage" ] && \
+        bzimage_default="$kdir/arch/x86/boot/bzImage"
+
+    local initramfs_default=""
+    [ -f "$PROJECT_DIR/ps4-linux-payloads/linux/initramfs.cpio.gz" ] && \
+        initramfs_default="$PROJECT_DIR/ps4-linux-payloads/linux/initramfs.cpio.gz"
+
+    local out
+    out=$(yad --center --borders=10 \
+        --title="Transfert FTP vers la PS4" \
+        --form \
+        --text="<b>Transfert FTP → /data/linux/boot/ sur la PS4</b>\n\n<small>La PS4 doit être sous Linux ou avoir un serveur FTP actif (GoldHEN).\nLaissez vide pour ne pas envoyer le fichier.</small>\n" \
+        --field="IP de la PS4 :":TEXT "$last_ip" \
+        --field="Port FTP :":NUM "2121!1..65535!1" \
+        --field="Utilisateur FTP :":TEXT "anonymous" \
+        --field="Mot de passe :":TEXT "" \
+        --field="Dossier distant :":TEXT "/data/linux/boot" \
+        --field="bzImage local :":FL "${bzimage_default:-$PROJECT_DIR/}" \
+        --field="initramfs.cpio.gz local :":FL "${initramfs_default:-$PROJECT_DIR/}" \
+        --button="Annuler:1" --button="🚀 Envoyer:0" \
+        --width=720)
+    [ $? -ne 0 ] || [ -z "$out" ] && return
+
+    IFS='|' read -r ps4_ip ps4_port ftp_user ftp_pass remote_dir bz_src init_src <<< "$out"
+    ps4_ip="${ps4_ip//|/}"
+    ps4_port="${ps4_port//|/}"
+    ftp_user="${ftp_user//|/}"
+    ftp_pass="${ftp_pass//|/}"
+    remote_dir="${remote_dir//|/}"
+    bz_src="${bz_src//|/}"
+    init_src="${init_src//|/}"
+
+    [ -z "$ps4_ip" ] && yad_err "IP de la PS4 non saisie." && return
+
+    echo "$ps4_ip" > "$PS4_FTP_IP_FILE"
+
+    # Vérifier que curl est disponible
+    if ! command -v curl >/dev/null 2>&1; then
+        yad_err "curl est requis.\n<b>sudo apt install curl</b>"
+        return
+    fi
+
+    local files_to_send=()
+    [ -f "$bz_src" ]   && files_to_send+=("$bz_src")
+    [ -f "$init_src" ] && files_to_send+=("$init_src")
+
+    if [ "${#files_to_send[@]}" -eq 0 ]; then
+        yad_err "Aucun fichier valide sélectionné."
+        return
+    fi
+
+    local tmpscript
+    tmpscript=$(mktemp /tmp/hyb-ftp-XXXX.sh)
+    {
+        echo "#!/bin/bash"
+        echo "echo '=== Transfert FTP vers PS4 ==='"
+        echo "echo \"  IP     : $ps4_ip:$ps4_port\""
+        echo "echo \"  Dossier: $remote_dir\""
+        echo "echo ''"
+        local ftp_url="ftp://${ftp_user}"
+        [ -n "$ftp_pass" ] && ftp_url="${ftp_url}:${ftp_pass}"
+        ftp_url="${ftp_url}@${ps4_ip}:${ps4_port}${remote_dir}/"
+
+        for f in "${files_to_send[@]}"; do
+            local fname
+            fname=$(basename "$f")
+            echo "echo \"--- Envoi : $fname ---\""
+            echo "curl -T '$f' '${ftp_url}' --ftp-create-dirs --progress-bar 2>&1"
+            echo "[ \$? -eq 0 ] && echo \"  ✓ $fname envoyé\" || echo \"  ✗ Erreur envoi $fname\""
+            echo "echo ''"
+        done
+        echo "echo '=== Transfert terminé ==='"
+        echo "echo ''"
+        echo "read -rp '[Entrée pour fermer]'"
+    } > "$tmpscript"
+    chmod +x "$tmpscript"
+    case "$TERM_BIN" in
+        xfce4-terminal) xfce4-terminal --title="FTP PS4 — $ps4_ip" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+        gnome-terminal) gnome-terminal --title="FTP PS4 — $ps4_ip" -- bash -c "$tmpscript; rm -f $tmpscript" ;;
+        mate-terminal)  mate-terminal  --title="FTP PS4 — $ps4_ip" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+        *)              xterm -title "FTP PS4 — $ps4_ip" -e bash -c "$tmpscript; rm -f $tmpscript" ;;
+    esac
+}
+export -f do_ftp_transfer
+
+#------------------------------------------------------------------------
+# 5. Éditeur bootargs.txt / vram.txt
+#------------------------------------------------------------------------
+BOOTARGS_FILE="$CONF_DIR/bootargs.txt"
+VRAM_FILE="$CONF_DIR/vram.txt"
+export BOOTARGS_FILE VRAM_FILE
+
+[ ! -f "$BOOTARGS_FILE" ] && cat > "$BOOTARGS_FILE" << 'BAEOF'
+amdgpu.cik_support=1 amdgpu.si_support=1 amdgpu.dc=0 amdgpu.gttsize=2048 amdgpu.vm_fragment_size=9 amdgpu.pcie_gen2=1 amdgpu.aspm=0 amdgpu.dpm=1 amdgpu.lockup_timeout=10000 mitigations=off nopti spectre_v2=off noibpb noibrs ibt=off processor.max_cstate=1 idle=nomwait
+BAEOF
+[ ! -f "$VRAM_FILE" ] && echo "256" > "$VRAM_FILE"
+
+do_edit_bootargs() {
+    local cur_ba cur_vram
+    cur_ba=$(cat "$BOOTARGS_FILE"  2>/dev/null)
+    cur_vram=$(cat "$VRAM_FILE"    2>/dev/null || echo "256")
+
+    local out
+    out=$(yad --center --borders=10 \
+        --title="Éditeur bootargs.txt / vram.txt" \
+        --form \
+        --text="<b>Édition des fichiers de configuration kernel PS4</b>\n
+<b>bootargs.txt</b> — arguments passés au kernel au démarrage
+<b>vram.txt</b>     — taille VRAM réservée (en Mo)
+
+<small>Paramètres UART (désactivé sur noyaux récents) :
+  Éolie/Belize : <tt>console=uart8250,mmio32,0xd0340000</tt>
+  Baïkal       : <tt>console=uart8250,mmio32,0xC890E000</tt></small>\n" \
+        --field="bootargs.txt :":TEXT "$cur_ba" \
+        --field="VRAM (Mo) :":TEXT "$cur_vram" \
+        --field="Ajouter mitigations=off :":CHK "FALSE" \
+        --field="Ajouter UART Éolie/Belize :":CHK "FALSE" \
+        --field="Ajouter UART Baïkal :":CHK "FALSE" \
+        --button="Annuler:1" \
+        --button="💾 Sauvegarder:0" \
+        --width=800)
+    [ $? -ne 0 ] || [ -z "$out" ] && return
+
+    IFS='|' read -r new_ba new_vram add_mit add_uart_belize add_uart_baikal <<< "$out"
+
+    # Ajouter les options cochées si pas déjà présentes
+    [ "$add_mit"          = "TRUE" ] && \
+        [[ "$new_ba" != *"mitigations=off"* ]] && \
+        new_ba="$new_ba mitigations=off nopti spectre_v2=off noibpb noibrs ibt=off"
+    [ "$add_uart_belize"  = "TRUE" ] && \
+        [[ "$new_ba" != *"uart8250"* ]] && \
+        new_ba="$new_ba console=uart8250,mmio32,0xd0340000"
+    [ "$add_uart_baikal"  = "TRUE" ] && \
+        [[ "$new_ba" != *"uart8250"* ]] && \
+        new_ba="$new_ba console=uart8250,mmio32,0xC890E000"
+
+    # Nettoyer les espaces multiples
+    new_ba=$(echo "$new_ba" | tr -s ' ' | sed 's/^ //;s/ $//')
+
+    echo "$new_ba"   > "$BOOTARGS_FILE"
+    echo "$new_vram" > "$VRAM_FILE"
+
+    # Proposer de copier vers USB ou via FTP
+    local action
+    action=$(yad --center --borders=10 \
+        --title="Fichiers sauvegardés" \
+        --list \
+        --text="✓ <b>bootargs.txt</b> et <b>vram.txt</b> sauvegardés dans :\n<tt>$CONF_DIR</tt>\n\nQue voulez-vous faire ensuite ?" \
+        --column="Action" \
+        --column="Description" \
+        "usb"   "Copier sur la clé USB de boot" \
+        "ftp"   "Transférer via FTP vers la PS4" \
+        "open"  "Ouvrir le dossier de config" \
+        "done"  "Terminer" \
+        --print-column=1 --separator="" \
+        --button="Annuler:1" --button="OK:0" \
+        --width=480 --height=280)
+    [ $? -ne 0 ] || [ -z "$action" ] && return
+    action="${action//|/}"
+
+    case "$action" in
+        usb)  do_prepare_usb   ;;
+        ftp)  do_ftp_transfer  ;;
+        open) xdg-open "$CONF_DIR" >/dev/null 2>&1 & ;;
+    esac
+}
+export -f do_edit_bootargs
+
+#------------------------------------------------------------------------
+# 6. Builder initramfs minimaliste (busybox statique + repackage cpio.gz)
+#------------------------------------------------------------------------
+INITRAMFS_DIR="$PROJECT_DIR/initramfs-build"
+export INITRAMFS_DIR
+
+do_build_initramfs() {
+    # Vérifier les outils nécessaires
+    local missing_tools=()
+    for t in cpio gzip find; do
+        command -v "$t" >/dev/null 2>&1 || missing_tools+=("$t")
+    done
+    if [ "${#missing_tools[@]}" -gt 0 ]; then
+        yad_err "Outils manquants : <b>${missing_tools[*]}</b>\n<tt>sudo apt install ${missing_tools[*]}</tt>"
+        return
+    fi
+
+    local choice
+    choice=$(yad --center --borders=10 \
+        --title="Builder initramfs PS4" \
+        --list \
+        --text="<b>Builder initramfs minimaliste pour PS4</b>\n\nQue voulez-vous faire ?" \
+        --column="Action" \
+        --column="Description" \
+        "create"   "Créer un nouveau dossier de travail (busybox statique)" \
+        "repack"   "Repackager un initramfs existant en cpio.gz" \
+        "extract"  "Extraire un initramfs.cpio.gz existant pour le modifier" \
+        "addscript" "Ajouter un script init personnalisé" \
+        --print-column=1 --separator="" \
+        --button="Annuler:1" --button="OK:0" \
+        --width=600 --height=300)
+    [ $? -ne 0 ] || [ -z "$choice" ] && return
+    choice="${choice//|/}"
+
+    case "$choice" in
+
+        create)
+            # Vérifier busybox-static
+            if ! command -v busybox >/dev/null 2>&1 && \
+               [ ! -f /bin/busybox ] && [ ! -f /usr/bin/busybox ]; then
+                yad_confirm "busybox-static n'est pas installé.\n\nInstaller maintenant ?\n<tt>sudo apt install busybox-static</tt>" || return
+                run_in_term "Installation busybox-static" "sudo apt install -y busybox-static"
+            fi
+
+            local tmpscript
+            tmpscript=$(mktemp /tmp/hyb-initramfs-XXXX.sh)
+            cat > "$tmpscript" << IEOF
+#!/bin/bash
+echo '=== Création dossier initramfs PS4 ==='
+mkdir -p '$INITRAMFS_DIR'
+cd '$INITRAMFS_DIR'
+
+# Structure minimale
+for d in bin sbin etc proc sys dev tmp lib lib64 usr/bin usr/sbin mnt/root; do
+    mkdir -p \$d
+done
+
+# Copier busybox
+BUSYBOX=\$(command -v busybox || echo /bin/busybox)
+if [ ! -f "\$BUSYBOX" ]; then
+    echo 'ERREUR : busybox introuvable — sudo apt install busybox-static'
+    read -rp '[Entrée pour fermer]'
+    exit 1
+fi
+cp "\$BUSYBOX" bin/busybox
+chmod +x bin/busybox
+
+# Créer les applets busybox
+cd bin
+./busybox --list 2>/dev/null | while read app; do
+    [ "\$app" = "busybox" ] && continue
+    ln -sf busybox "\$app" 2>/dev/null
+done
+cd ..
+
+# Script init minimal
+cat > init << 'INITEOF'
+#!/bin/sh
+mount -t proc     none /proc
+mount -t sysfs    none /sys
+mount -t devtmpfs none /dev 2>/dev/null || mknod /dev/null c 1 3
+
+# Lire le temps depuis la ligne de commande (time=TIMESTAMP)
+CMDLINE=\$(cat /proc/cmdline)
+for param in \$CMDLINE; do
+    case "\$param" in
+        time=*) date -s @"\${param#time=}" 2>/dev/null ;;
+    esac
+done
+
+echo "=== initramfs PS4 boot ==="
+echo "Ligne de commande : \$CMDLINE"
+
+# Shell de secours
+exec /bin/sh
+INITEOF
+chmod +x init
+
+echo ''
+echo '=== Structure créée ==='
+find . -maxdepth 2 | sort
+echo ''
+echo 'Pour repackager → relancez le builder et choisissez "Repackager"'
+echo ''
+read -rp '[Entrée pour ouvrir le dossier]'
+sleep 1 && xdg-open '$INITRAMFS_DIR'
+IEOF
+            chmod +x "$tmpscript"
+            case "$TERM_BIN" in
+                xfce4-terminal) xfce4-terminal --title="Créer initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                gnome-terminal) gnome-terminal --title="Créer initramfs" -- bash -c "$tmpscript; rm -f $tmpscript" ;;
+                mate-terminal)  mate-terminal  --title="Créer initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                *)              xterm -title "Créer initramfs" -e bash -c "$tmpscript; rm -f $tmpscript" ;;
+            esac
+            ;;
+
+        extract)
+            local src_cpio
+            src_cpio=$(yad --center --borders=10 \
+                --title="Sélectionner l'initramfs à extraire" \
+                --file --filename="$PROJECT_DIR/" \
+                --file-filter="initramfs | *.cpio.gz *.cpio *.gz" \
+                --button="Annuler:1" --button="Sélectionner:0" \
+                --width=860 --height=540)
+            [ $? -ne 0 ] || [ -z "$src_cpio" ] && return
+
+            local tmpscript
+            tmpscript=$(mktemp /tmp/hyb-extract-initramfs-XXXX.sh)
+            cat > "$tmpscript" << EXEOF
+#!/bin/bash
+echo '=== Extraction initramfs ==='
+mkdir -p '$INITRAMFS_DIR'
+cd '$INITRAMFS_DIR'
+echo "Source : $src_cpio"
+echo ''
+case "$src_cpio" in
+    *.gz) zcat '$src_cpio' | cpio -idm --quiet ;;
+    *)    cpio -idm --quiet < '$src_cpio' ;;
+esac
+echo '✓ Extraction terminée'
+echo ''
+echo '=== Contenu ==='
+ls -la
+echo ''
+read -rp '[Entrée pour ouvrir le dossier]'
+sleep 1 && xdg-open '$INITRAMFS_DIR'
+EXEOF
+            chmod +x "$tmpscript"
+            case "$TERM_BIN" in
+                xfce4-terminal) xfce4-terminal --title="Extraire initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                gnome-terminal) gnome-terminal --title="Extraire initramfs" -- bash -c "$tmpscript; rm -f $tmpscript" ;;
+                mate-terminal)  mate-terminal  --title="Extraire initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                *)              xterm -title "Extraire initramfs" -e bash -c "$tmpscript; rm -f $tmpscript" ;;
+            esac
+            ;;
+
+        repack)
+            [ ! -d "$INITRAMFS_DIR" ] && \
+                yad_err "Dossier initramfs introuvable :\n<tt>$INITRAMFS_DIR</tt>\nCréez d'abord la structure avec 'Créer'." && return
+
+            local out_file="$PROJECT_DIR/initramfs.cpio.gz"
+            local out_choice
+            out_choice=$(yad --center --borders=10 \
+                --title="Destination du repackage" \
+                --form \
+                --text="<b>Repackager en initramfs.cpio.gz</b>\n\nSource : <tt>$INITRAMFS_DIR</tt>" \
+                --field="Fichier de sortie :":FL "$out_file" \
+                --button="Annuler:1" --button="🚀 Repackager:0" \
+                --width=680)
+            [ $? -ne 0 ] || [ -z "$out_choice" ] && return
+            out_file=$(echo "$out_choice" | cut -d'|' -f1)
+
+            local tmpscript
+            tmpscript=$(mktemp /tmp/hyb-repack-initramfs-XXXX.sh)
+            cat > "$tmpscript" << RPEOF
+#!/bin/bash
+echo '=== Repackage initramfs ==='
+echo "Source  : $INITRAMFS_DIR"
+echo "Sortie  : $out_file"
+echo ''
+cd '$INITRAMFS_DIR'
+find . | cpio -o -H newc 2>/dev/null | gzip -9 > '$out_file'
+echo "✓ Créé : $out_file"
+echo ""
+ls -lh '$out_file'
+echo ''
+echo 'Vous pouvez maintenant :'
+echo '  → Copier sur clé USB  (onglet : Préparer clé USB)'
+echo '  → Transférer via FTP  (onglet : Transfert FTP PS4)'
+echo ''
+read -rp '[Entrée pour fermer]'
+RPEOF
+            chmod +x "$tmpscript"
+            case "$TERM_BIN" in
+                xfce4-terminal) xfce4-terminal --title="Repackager initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                gnome-terminal) gnome-terminal --title="Repackager initramfs" -- bash -c "$tmpscript; rm -f $tmpscript" ;;
+                mate-terminal)  mate-terminal  --title="Repackager initramfs" -e "bash -c '$tmpscript; rm -f $tmpscript'" ;;
+                *)              xterm -title "Repackager initramfs" -e bash -c "$tmpscript; rm -f $tmpscript" ;;
+            esac
+            ;;
+
+        addscript)
+            [ ! -d "$INITRAMFS_DIR" ] && \
+                yad_err "Dossier initramfs introuvable :\n<tt>$INITRAMFS_DIR</tt>\nCréez d'abord la structure." && return
+
+            local script_name
+            local out_s
+            out_s=$(yad --center --borders=10 \
+                --title="Ajouter un script à l'initramfs" \
+                --form \
+                --text="<b>Ajouter un script dans l'initramfs</b>\n\nLe script sera créé dans <tt>$INITRAMFS_DIR/</tt>" \
+                --field="Nom du script :":TEXT "custom-init.sh" \
+                --field="Contenu :":TXT "#!/bin/sh\n# Script personnalisé\necho 'Hello from PS4 initramfs'\n" \
+                --button="Annuler:1" --button="Créer:0" \
+                --width=700 --height=400)
+            [ $? -ne 0 ] || [ -z "$out_s" ] && return
+            script_name=$(echo "$out_s" | cut -d'|' -f1)
+            local script_content
+            script_content=$(echo "$out_s" | cut -d'|' -f2-)
+            local script_path="$INITRAMFS_DIR/$script_name"
+            printf '%s' "$script_content" > "$script_path"
+            chmod +x "$script_path"
+            yad_info "✓ Script créé : <tt>$script_path</tt>\n\nN'oubliez pas de le référencer dans <tt>init</tt>,\npuis de repackager l'initramfs."
+            ;;
+    esac
+}
+export -f do_build_initramfs
+
+#------------------------------------------------------------------------
+# Al-Azif — profil GitHub
+#------------------------------------------------------------------------
+do_open_url_alazif() {
+    xdg-open "https://github.com/Al-Azif" >/dev/null 2>&1 &
+    yad_info "🐙 <b>Al-Azif</b>
+
+Ouverture du profil GitHub...
+
+<small>Vous y trouverez ses outils PS4 :
+payloads, exploits, firmware dumps et plus.</small>
+
+<tt>https://github.com/Al-Azif</tt>"
+}
+export -f do_open_url_alazif
+
+#------------------------------------------------------------------------
+# Ouvrir le dossier projet
+#------------------------------------------------------------------------
 do_open_project_dir() {
     xdg-open "$PROJECT_DIR" >/dev/null 2>&1 &
     yad_info "📂 Projet ouvert :\n<tt>$PROJECT_DIR</tt>"
 }
-export -f do_open_project_dir
-export -f do_git_ps4_kernel do_git_orbis do_open_project_dir tab_git_ps4
 
 tab_git_ps4() {
-    yad --plug="$KEY" --tabnum=11 \
+    yad --plug="$KEY" --tabnum=10 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Git.png" --image-on-top \
-        --text="<big><b>🚀 GIT PS4 — Kernels + Orbis + Payloads</b></big>
+        --image="/usr/share/hybryde/SquareGlass/Java 1.png" --image-on-top \
+        --text="<big><b><span foreground='#F48FB1'>🚀 GIT PS4 — Kernels + Orbis + Payloads + Déploiement</span></b></big>
 
 <b>PROJET :</b> <tt>$PROJECT_DIR</tt>
 
-Télécharge kernels PS4 optimisés + Orbis (SDK PS4) + Payloads Linux avec check dépendances auto.\n" \
+Télécharge, compile et déploie tout l'écosystème PS4 Linux.\n" \
         \
         --field="":LBL "" \
         --field="<b>— KERNELS PS4 (crashniels/linux) —</b>":LBL "" \
-        --field="  🚀 ps4-5.15.y (stable/recommandé)":BTN 'bash -c "do_git_ps4_kernel"' \
-        --field="  🚀 ps4-6.1.y / 6.6.y / master":BTN 'bash -c "do_git_ps4_kernel"' \
+        --field="  🚀 crashniels/linux — kernel PS4 (branche au choix)":BTN 'bash -c "do_git_ps4_kernel"' \
+        --field="  🚀 feeRnt/ps4-linux-12xx — kernel PS4 (branches auto)":BTN 'bash -c "do_git_feernt_kernel"' \
+        --field="  🗂  fail0verflow/ps4-linux (référence originale)":BTN 'bash -c "do_git_fail0verflow"' \
+        --field="  🐙 Al-Azif — profil GitHub (payloads, outils PS4)":BTN 'bash -c "do_open_url_alazif"' \
+        --field="  🎮 GoldHEN — télécharger la dernière release":BTN 'bash -c "do_git_goldhen"' \
         \
         --field="":LBL "" \
         --field="<b>— ORBIS (SDK PS4) —</b>":LBL "" \
-        --field="  🚀 Orbis + auto-install dépendances":BTN 'bash -c "do_git_orbis"' \
+        --field="  🚀 OpenOrbis PS4 Toolchain (dernière release auto)":BTN 'bash -c "do_git_orbis"' \
         \
         --field="":LBL "" \
-        --field="<b>— PAYLOADS LINUX (ps4boot/ps4-linux-payloads) —</b>":LBL "" \
-        --field="  🚀 Télécharger + compiler les payloads":BTN 'bash -c "do_git_payloads"' \
-        --field="  📖 README — GoldHEN / bzImage / initramfs":BTN 'bash -c "do_payloads_readme"' \
-        --field="  <small><i>→ Destination : $PROJECT_DIR/ps4-linux-payloads/linux</i></small>":LBL "" \
+        --field="<b>— PAYLOADS LINUX (ps4boot) —</b>":LBL "" \
+        --field="  🚀 ps4-linux-payloads — télécharger + compiler":BTN 'bash -c "do_git_payloads"' \
+        --field="  📖 README GoldHEN / bzImage / initramfs":BTN 'bash -c "do_payloads_readme"' \
+        --field="  ⚡ ps4-kexec — payload kexec (maillon de boot)":BTN 'bash -c "do_git_kexec"' \
+        \
+        --field="":LBL "" \
+        --field="<b>— DÉPLOIEMENT —</b>":LBL "" \
+        --field="  💾 Préparer une clé USB de boot PS4":BTN 'bash -c "do_prepare_usb"' \
+        --field="  📡 Transfert FTP → /data/linux/boot/ sur la PS4":BTN 'bash -c "do_ftp_transfer"' \
+        \
+        --field="":LBL "" \
+        --field="<b>— CONFIGURATION KERNEL —</b>":LBL "" \
+        --field="  ⚙  Éditer bootargs.txt / vram.txt":BTN 'bash -c "do_edit_bootargs"' \
+        \
+        --field="":LBL "" \
+        --field="<b>— INITRAMFS BUILDER —</b>":LBL "" \
+        --field="  🛠  Créer / extraire / repackager un initramfs.cpio.gz":BTN 'bash -c "do_build_initramfs"' \
+        --field="  <small><i>→ Basé sur busybox statique — supporte le script init PS4 RTC</i></small>":LBL "" \
         \
         --field="":LBL "" \
         --field="<b>— Projet —</b>":LBL "" \
         --field="  📂 Ouvrir PROJECT-PS4/":BTN 'bash -c "do_open_project_dir"' \
         \
-        --field="Kernels : <tt>$KERNELS_DIR</tt>":LBL "" \
-        --field="Orbis   : <tt>$ORBIS_DIR</tt>":LBL "" \
-        --field="Payloads: <tt>$PROJECT_DIR/ps4-linux-payloads</tt>":LBL "" \
+        --field="Kernels  : <tt>$KERNELS_DIR</tt>":LBL "" \
+        --field="Orbis    : <tt>$ORBIS_DIR</tt>":LBL "" \
+        --field="Payloads : <tt>$PROJECT_DIR/ps4-linux-payloads</tt>":LBL "" \
+        --field="kexec    : <tt>$PROJECT_DIR/ps4-kexec</tt>":LBL "" \
+        --field="initramfs: <tt>$INITRAMFS_DIR</tt>":LBL "" \
         \
-        "" "" "" "" "" "" "" "" "" "" "" "" "" "" \
+        "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" \
         &
 }
 
 #========================================================================
+
+#========================================================================
+# ONGLET 11 — Communauté PS4 Linux
+#========================================================================
+
+do_open_url_dionkill() {
+    xdg-open "https://dionkill.github.io/ps4-linux-tutorial/files.html" >/dev/null 2>&1 &
+}
+export -f do_open_url_dionkill
+
+do_open_url_ps4linux() {
+    xdg-open "https://ps4linux.com/downloads/#PS4_Linux_Kernel_Source" >/dev/null 2>&1 &
+}
+export -f do_open_url_ps4linux
+
+tab_communaute() {
+    yad --plug="$KEY" --tabnum=11 \
+        --form --scroll \
+        --image="/usr/share/hybryde/SquareGlass/Pidgin 2.png" --image-on-top \
+        --text="<big><b><span foreground='#80CBC4'>🌍 Communauté PS4 Linux</span></b></big>
+Ressources communautaires, tutoriels, téléchargements et aide en ligne.\n" \
+        \
+        --field="":LBL "" \
+        --field="<b>— Dionkill — PS4 Linux Tutorial —</b>":LBL "" \
+        --field="  🌐 Ouvrir ps4-linux-tutorial (dionkill.github.io)":BTN 'bash -c "do_open_url_dionkill"' \
+        --field="  <small><i>All In One pour PS4 : distribution bzImage, initramfs, tutorials et plus.</i></small>":LBL "" \
+        \
+        --field="":LBL "" \
+        --field="<b>— noob404 — PS4Linux.com —</b>":LBL "" \
+        --field="  🌐 Ouvrir ps4linux.com (noob404)":BTN 'bash -c "do_open_url_ps4linux"' \
+        --field="  <small><i>Forum, aide, tutoriels, téléchargements et autres ressources PS4 Linux.</i></small>":LBL "" \
+        \
+        --field="":LBL "" \
+        --field="<b>— Liens utiles —</b>":LBL "" \
+        --field="  <small><tt>https://dionkill.github.io/ps4-linux-tutorial/files.html</tt></small>":LBL "" \
+        --field="  <small><tt>https://ps4linux.com/downloads/#PS4_Linux_Kernel_Source</tt></small>":LBL "" \
+        \
+        "" "" "" "" "" "" "" "" "" "" "" "" \
+        &
+}
+
 # LANCEMENT DES ONGLETS EN ARRIÈRE-PLAN
 #========================================================================
 
-tab_mesa
+# Exports onglet 11 — toutes les fonctions doivent être définies avant cet appel
+export -f do_git_ps4_kernel
+export -f do_git_feernt_kernel
+export -f do_git_orbis
+export -f do_git_payloads
+export -f do_payloads_readme
+export -f do_git_kexec
+export -f do_git_fail0verflow
+export -f do_git_goldhen
+export -f do_prepare_usb
+export -f do_ftp_transfer
+export -f do_edit_bootargs
+export -f do_build_initramfs
+export -f do_open_url_alazif
+export -f do_open_project_dir
+export -f tab_git_ps4
+
 tab_tar_create
 tab_img_create
 tab_tar_extract
 tab_mount_ps4
-tab_aide
 tab_reseau
 tab_diagnostic
+tab_mesa
 tab_mesa_env
 tab_kernel
 tab_git_ps4
+tab_communaute
+tab_aide
 #========================================================================
 # FENÊTRE PRINCIPALE
 #========================================================================
@@ -1844,15 +2995,16 @@ yad --notebook \
 <small>Mesa  •  Archivage  •  Image disque  •  SSD PS4  •  Réseau  •  Diagnostic  •  Mesa ENV  •  Kernel</small>" \
     --button="Fermer:0" \
     --key="$KEY" \
-    --tab="🔧 Compiler Mesa" \
     --tab="📦 Créer un tar.xz" \
     --tab="💿 Créer un .img" \
     --tab="📂 Décompresser tar.xz" \
     --tab="🔌 Monter SSD PS4" \
-    --tab="📖 Aide" \
     --tab="🌐 Réseau" \
     --tab="🔍 Diagnostic" \
+    --tab="🔧 Compiler Mesa" \
     --tab="⚙ Mesa ENV" \
     --tab="🐧 Kernel LTO" \
     --tab="🐧 GIT DEV Kernel/Orbis..." \
+    --tab="🌍 Communauté" \
+    --tab="📖 Aide" \
     --active-tab=1

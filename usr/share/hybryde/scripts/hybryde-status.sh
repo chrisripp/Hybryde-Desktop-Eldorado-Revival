@@ -184,20 +184,22 @@ status_label() {
     echo "${1#*:}"
 }
 
-output_zenity() {
+output_yad() {
     collect
 
-    local msg
-    msg="<b>DE actif :</b> $DE\n"
-    msg+="<b>WM :</b> ${WM:-aucun}    <b>Cairo-Dock :</b> $CAIRO instance(s)\n"
-    msg+="<b>Switch en cours :</b> $SWITCHING\n\n"
-    msg+="<b>Composants :</b>\n"
+    local msg=""
+    msg+="<b>DE actif :</b> $DE\n"
+    msg+="<b>WM :</b> ${WM:-aucun}\n"
+    msg+="<b>Cairo-Dock :</b> $CAIRO instance(s)\n"
+    msg+="<b>Switch en cours :</b> $SWITCHING\n"
+    msg+="<b>Flag retour :</b> $RETURN_F\n\n"
+
+    msg+="<b>Composants :</b>\n\n"
 
     for r in "$R_SESSION" "$R_PICOM" "$R_NM" "$R_DUNST" \
              "$R_LOCKER" "$R_KEYRING" "$R_AUDIO" "$R_PASYS" "$R_POLKIT"; do
-        local icon
+        local icon lbl
         icon=$(status_icon "$r")
-        local lbl
         lbl=$(status_label "$r")
         msg+="  $icon  $lbl\n"
     done
@@ -206,13 +208,16 @@ output_zenity() {
 
     yad --info \
         --center \
-        --borders=12 \
         --title="Hybryde — État de la session" \
         --window-icon="utilities-system-monitor" \
         --text="$msg" \
+        --width=480 \
+        --height=360 \
+        --borders=12 \
         --button="OK:0" \
-        --width=440 --height=340 \
-        --no-wrap
+        --no-wrap \
+        --markup \
+        --fontname="monospace 10"
 }
 
 #========================================================================
@@ -250,14 +255,11 @@ EOF
 #========================================================================
 
 case "${1:-}" in
-    --zenity|-z)  output_zenity ;;
-    --json|-j)    output_json   ;;
-    --text|-t|"") output_text   ;;
+    --text|-t)   output_text ;;
+    --json|-j)   output_json ;;
+    --yad|-z|"") output_yad ;;
     *)
-        echo "Usage: $0 [--text | --zenity | --json]"
-        echo "  --text    Sortie terminal (défaut)"
-        echo "  --zenity  Fenêtre popup GTK"
-        echo "  --json    Sortie JSON pour scripts"
+        echo "Usage: $0 [--text | --yad | --json]"
         exit 1
         ;;
 esac
