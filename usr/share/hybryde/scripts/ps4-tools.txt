@@ -776,7 +776,6 @@ read -p 'Entrée...'
 tab_mount_ps4() {
     yad --plug="$KEY" --tabnum=4 \
         --form \
-        --image="/usr/share/hybryde/SquareGlass/Harddrive 2.png" --image-on-top \
         --text="<b><span foreground='#EF9A9A'>SSD PS4 — Montage rapide</span></b>
 
 Clé : <tt>$PS4_KEY</tt>
@@ -1279,7 +1278,7 @@ export -f do_mesa_show_current
 tab_mesa_env() {
     yad --plug="$KEY" --tabnum=8 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Go Daddy.png" --image-on-top \
+        --image="/usr/share/hybryde/SquareGlass/Control Panel 1.png" --image-on-top \
         --text="<big><b><span foreground='#FFCC80'>⚙  Variables Mesa / Vulkan</span></b></big>
 Définissez RADV_DEBUG, MESA_DEBUG, AMD_DEBUG… sauvegardez des profils
 et lancez une application avec ces variables pré-exportées.\n" \
@@ -2931,7 +2930,7 @@ do_open_project_dir() {
 tab_git_ps4() {
     yad --plug="$KEY" --tabnum=10 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Java 1.png" --image-on-top \
+        --image="/usr/share/hybryde/SquareGlass/Git.png" --image-on-top \
         --text="<big><b><span foreground='#F48FB1'>🚀 GIT PS4 — Kernels + Orbis + Payloads + Déploiement</span></b></big>
 
 <b>PROJET :</b> <tt>$PROJECT_DIR</tt>
@@ -3003,7 +3002,7 @@ export -f do_open_url_ps4linux
 tab_communaute() {
     yad --plug="$KEY" --tabnum=11 \
         --form --scroll \
-        --image="/usr/share/hybryde/SquareGlass/Pidgin 2.png" --image-on-top \
+        --image="/usr/share/hybryde/SquareGlass/My Network Places 7.png" --image-on-top \
         --text="<big><b><span foreground='#80CBC4'>🌍 Communauté PS4 Linux</span></b></big>
 Ressources communautaires, tutoriels, téléchargements et aide en ligne.\n" \
         \
